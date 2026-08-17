@@ -1,0 +1,305 @@
+/* 讲师实时大屏看板专项样式 (Dashboard) */
+
+.dashboard-container {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 顶部导航与指挥条 */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 12px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.dash-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dash-logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #050b14;
+  box-shadow: var(--shadow-glow);
+}
+
+.dash-title-main {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dash-title-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.dash-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.session-selector {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-glow);
+  color: var(--text-bright);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.session-selector option {
+  background: #0d162b;
+  color: var(--text-bright);
+}
+
+/* 顶部核心指标 KPI 仪表盘 */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(14px);
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  transition: all var(--transition-fast);
+}
+
+.kpi-card:hover {
+  border-color: var(--border-glow-active);
+  transform: translateY(-2px);
+}
+
+.kpi-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.5px;
+}
+
+.kpi-unit {
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.kpi-sparkline {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-size: 1.8rem;
+  opacity: 0.15;
+  color: var(--accent-cyan);
+}
+
+/* 大屏三栏网格布局 */
+.dash-main-grid {
+  display: grid;
+  grid-template-columns: 28% 44% 28%;
+  gap: 14px;
+  flex: 1;
+}
+
+.dash-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 标准卡片 */
+.dash-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+
+.dash-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.card-heading-dot {
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--accent-cyan);
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-box {
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
+}
+
+.chart-box-large {
+  min-height: 320px;
+}
+
+/* AI 智能讲座建议卡片 */
+.ai-advice-card {
+  background: linear-gradient(145deg, rgba(13, 22, 43, 0.95), rgba(20, 35, 70, 0.85));
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  box-shadow: 0 8px 30px rgba(0, 242, 254, 0.12);
+}
+
+.ai-engine-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ai-advice-content {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.ai-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.ai-keyword-tag {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  color: var(--accent-cyan);
+}
+
+/* 底部明细抽屉 */
+.drawer-card {
+  margin-top: 4px;
+}
+
+.drawer-header {
+  cursor: pointer;
+}
+
+.teacher-table-box {
+  max-height: 280px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.teacher-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.teacher-table th {
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--accent-cyan);
+  padding: 10px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.teacher-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.teacher-table tr:hover {
+  background: rgba(0, 242, 254, 0.06);
+}
+
+/* 响应式断点适配 */
+@media (max-width: 1280px) {
+  .kpi-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .dash-main-grid {
+    grid-template-columns: 1fr;
+  }
+}

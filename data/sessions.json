@@ -1,0 +1,18 @@
+[
+  {
+    "id": "2026-chongming-ai-physics",
+    "name": "2026年8月 上海市崇明区物理教师AI创新与实验开发培训",
+    "theme": "从实验痛点到智能工具：AI协作开发赋能物理实验创新的实践与复现",
+    "date": "2026-08",
+    "region": "上海市崇明区",
+    "isDefault": true
+  },
+  {
+    "id": "2026-guizhou-physics",
+    "name": "2026年6月 贵州省物理教师来沪数字化研修（历史批次）",
+    "theme": "中学物理教学数字化转型与AI赋能实践",
+    "date": "2026-06",
+    "region": "贵州省",
+    "isDefault": false
+  }
+]

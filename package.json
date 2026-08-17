@@ -1,0 +1,19 @@
+{
+  "name": "ai-teacher-innovation-survey",
+  "version": "2.0.0",
+  "description": "物理教师 AI 创新能力画像与实验开发需求调查平台 (AI Teacher Innovation Survey & Research Dashboard)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "physics-education",
+    "ai-innovation",
+    "teacher-survey",
+    "dashboard",
+    "echarts"
+  ],
+  "author": "wuhao",
+  "license": "MIT"
+}

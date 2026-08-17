@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物理教师 AI 创新能力画像与实验开发需求大屏看板</title>
+  
+  <!-- 引入现代字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- 引入 ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="stylesheet" href="/public/css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- 顶部指挥控制栏 -->
+    <header class="dash-header">
+      <div class="dash-title-group">
+        <div class="dash-logo-icon">⚡</div>
+        <div>
+          <h1 class="dash-title-main">物理教师 AI 创新能力画像与实验开发需求大屏</h1>
+          <p class="dash-title-sub">AI Teacher Innovation Survey & Research Dashboard</p>
+        </div>
+      </div>
+
+      <div class="dash-controls">
+        <!-- 批次选择 -->
+        <select id="sessionSelect" class="session-selector"></select>
+
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted);">
+          <span class="pulse-dot"></span>
+          <span>实时流连接中</span>
+        </div>
+
+        <button class="btn btn-secondary" id="btnRefresh" title="手动刷新">🔄 刷新</button>
+        <button class="btn btn-secondary" id="btnExportAnonCsv" title="导出学术论文脱敏 CSV 数据">📄 论文脱敏 CSV</button>
+        <button class="btn btn-secondary" id="btnExportCsv" title="导出全量明细 CSV">📊 全量 CSV</button>
+        <button class="btn btn-secondary" id="btnExportJson" title="导出原始 JSON">📦 JSON 备份</button>
+      </div>
+    </header>
+
+    <!-- 顶部核心指标 KPI 仪表盘 -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">已提交教师数</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiCount">0</span>
+          <span class="kpi-unit">人</span>
+        </div>
+        <div class="kpi-sparkline">👥</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">平均实际教龄</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiAvgYears">0</span>
+          <span class="kpi-unit">年</span>
+        </div>
+        <div class="kpi-sparkline">⏳</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">AI 工具使用率</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiAiRate">0%</span>
+        </div>
+        <div class="kpi-sparkline">🤖</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">AI 编程/开发尝试率</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiCodingRate" style="color: var(--accent-cyan);">0%</span>
+        </div>
+        <div class="kpi-sparkline">💻</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">实验工具开发需求率</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiExpDemandRate" style="color: var(--accent-orange);">0%</span>
+        </div>
+        <div class="kpi-sparkline">🔬</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">正在构思/开展项目率</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiProjectRate" style="color: var(--accent-green);">0%</span>
+        </div>
+        <div class="kpi-sparkline">🚀</div>
+      </div>
+    </div>
+
+    <!-- 主体三大列网格 -->
+    <div class="dash-main-grid">
+      
+      <!-- 左列：地域分布与基础教龄画像 -->
+      <div class="dash-column">
+        <!-- 崇明 / 上海地域分布图 -->
+        <div class="dash-card" style="flex: 1.2;">
+          <div class="dash-card-header">
+            <div class="card-heading">
+              <span class="card-heading-dot"></span>
+              <span>参训教师来源地域分布 (上海 / 崇明)</span>
+            </div>
+            <span class="tag">实时定位</span>
+          </div>
+          <div id="mapChart" class="chart-box"></div>
+        </div>
+
+        <!-- 教龄结构分布图 -->
+        <div class="dash-card" style="flex: 0.9;">
+          <div class="dash-card-header">
+            <div class="card-heading">
+              <span class="card-heading-dot"></span>
+              <span>教师教龄结构阶梯分布</span>
+            </div>
+          </div>
+          <div id="yearsChart" class="chart-box"></div>
+        </div>
+      </div>
+
+      <!-- 中列：AI 5维能力画像、工具排行与项目漏斗 (核心科研与讲座重点) -->
+      <div class="dash-column">
+        <!-- 5 维能力雷达图 -->
+        <div class="dash-card" style="flex: 1.2;">
+          <div class="dash-card-header">
+            <div class="card-heading">
+              <span class="card-heading-dot"></span>
+              <span>教师 AI 创新能力 5 维画像 (AICP-PT 0-100标准分)</span>
+            </div>
+            <a href="/docs/scoring-method.md" target="_blank" class="tag tag-green" style="text-decoration: none;">算法规范 ↗</a>
+          </div>
+          <div id="radarChart" class="chart-box chart-box-large"></div>
+        </div>
+
+        <!-- AI 工具与项目漏斗双卡片并排 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1;">
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="card-heading">
+                <span class="card-heading-dot"></span>
+                <span>常用 AI 工具排行</span>
+              </div>
+            </div>
+            <div id="toolsChart" class="chart-box"></div>
+          </div>
+
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="card-heading">
+                <span class="card-heading-dot"></span>
+                <span>创新项目阶段漏斗</span>
+              </div>
+            </div>
+            <div id="projectFunnelChart" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右列：物理实验数字化诉求与现场 AI 讲座建议 -->
+      <div class="dash-column">
+        <!-- 物理实验创新需求 TOP 榜 -->
+        <div class="dash-card" style="flex: 1;">
+          <div class="dash-card-header">
+            <div class="card-heading">
+              <span class="card-heading-dot"></span>
+              <span>物理实验数字化开发需求 TOP 榜</span>
+            </div>
+            <span class="tag tag-orange">讲座演练重点</span>
+          </div>
+          <div id="expDemandChart" class="chart-box"></div>
+        </div>
+
+        <!-- 讲座现场实时 AI 调优建议面板 -->
+        <div class="dash-card ai-advice-card" style="flex: 1.2;">
+          <div class="dash-card-header">
+            <div class="card-heading">
+              <span class="card-heading-dot" style="background: var(--accent-green);"></span>
+              <span>现场讲座实时调优策略建议</span>
+            </div>
+            <div class="ai-engine-status">
+              <span id="aiEngineLabel">分析引擎准备中...</span>
+            </div>
+          </div>
+
+          <div class="ai-advice-content" id="aiAdviceContent">
+            正在智能挖掘教师开放期望与痛点...
+          </div>
+
+          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="ai-tag-group" id="aiKeywordTags"></div>
+            <button class="btn btn-secondary" id="btnRunAi" style="font-size: 0.75rem; padding: 4px 10px;">重新智能研判</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 底部抽屉：参训教师明细数据检索 -->
+    <div class="dash-card drawer-card">
+      <div class="dash-card-header">
+        <div class="card-heading">
+          <span class="card-heading-dot"></span>
+          <span>参训教师明细与能力指数表</span>
+          <span class="tag" id="tableCount" style="margin-left: 8px;">0 / 0</span>
+        </div>
+        <input type="text" id="tableSearchInput" class="form-input" style="width: 260px; padding: 6px 12px; font-size: 0.82rem;" placeholder="🔍 搜索姓名、学校、项目、痛点...">
+      </div>
+
+      <div class="teacher-table-box">
+        <table class="teacher-table">
+          <thead>
+            <tr>
+              <th>教师姓名</th>
+              <th>所在学校</th>
+              <th>教龄</th>
+              <th>AI 经验</th>
+              <th>综合画像分</th>
+              <th>实验创新分</th>
+              <th>创新项目阶段</th>
+              <th>项目名称</th>
+            </tr>
+          </thead>
+          <tbody id="teacherTableBody">
+            <!-- 动态填充 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 引用本地 JS 模块 -->
+  <script src="/public/js/radar-calculator.js"></script>
+  <script src="/public/js/ai-analyser.js"></script>
+  <script src="/public/js/dashboard.js"></script>
+</body>
+</html>

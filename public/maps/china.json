@@ -1,0 +1,12 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "name": "上海市", "center": [121.4737, 31.2304] }, "geometry": { "type": "Polygon", "coordinates": [[[121.1, 31.8], [121.9, 31.5], [121.8, 30.7], [121.1, 31.0], [121.1, 31.8]]] } },
+    { "type": "Feature", "properties": { "name": "贵州省", "center": [106.7135, 26.5783] }, "geometry": { "type": "Polygon", "coordinates": [[[104.0, 29.0], [109.5, 28.5], [109.0, 24.5], [104.5, 25.0], [104.0, 29.0]]] } },
+    { "type": "Feature", "properties": { "name": "江苏省", "center": [118.7674, 32.0415] }, "geometry": { "type": "Polygon", "coordinates": [[[116.5, 35.0], [121.8, 32.0], [120.5, 31.0], [118.0, 31.5], [116.5, 35.0]]] } },
+    { "type": "Feature", "properties": { "name": "浙江省", "center": [120.1536, 30.2875] }, "geometry": { "type": "Polygon", "coordinates": [[[118.0, 31.0], [122.5, 30.5], [121.0, 27.5], [118.5, 28.0], [118.0, 31.0]]] } },
+    { "type": "Feature", "properties": { "name": "北京市", "center": [116.4053, 39.9050] }, "geometry": { "type": "Polygon", "coordinates": [[[115.5, 41.0], [117.5, 40.5], [117.0, 39.5], [115.5, 39.5], [115.5, 41.0]]] } },
+    { "type": "Feature", "properties": { "name": "广东省", "center": [113.2806, 23.1252] }, "geometry": { "type": "Polygon", "coordinates": [[[109.5, 25.5], [117.0, 24.5], [115.0, 21.5], [110.0, 20.5], [109.5, 25.5]]] } },
+    { "type": "Feature", "properties": { "name": "四川省", "center": [104.0657, 30.6595] }, "geometry": { "type": "Polygon", "coordinates": [[[97.5, 34.0], [108.5, 32.0], [108.0, 28.0], [101.0, 26.5], [97.5, 34.0]]] } }
+  ]
+}
