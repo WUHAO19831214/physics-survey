@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>物理教师 AI 创新能力画像与实验开发需求调查</title>
+  <title>物理教师 AI 协作与实验开发交流问卷</title>
   
   <!-- 引入现代字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,9 +21,9 @@
     <header class="survey-header">
       <div class="survey-badge">
         <span class="pulse-dot"></span>
-        <span>2026 崇明研训·物理教师 AI 协作开发调研</span>
+        <span>2026 崇明研训·物理教师 AI 协作开发交流</span>
       </div>
-      <h1 class="survey-title">AI 创新能力画像与实验开发需求调查</h1>
+      <h1 class="survey-title">物理教师 AI 协作与实验创新交流问卷</h1>
       <p class="survey-subtitle">探索从教学实验痛点到智能工具生成的落地实践</p>
     </header>
 
@@ -59,17 +59,6 @@
       </div>
 
       <div class="form-item">
-        <label class="form-label">所在地区</label>
-        <input type="text" id="input-district" class="form-input" value="崇明区" placeholder="所在行政区">
-        <div class="quick-tags">
-          <span class="quick-tag-chip" data-target="input-district" data-value="崇明区">崇明区</span>
-          <span class="quick-tag-chip" data-target="input-district" data-value="浦东新区">浦东新区</span>
-          <span class="quick-tag-chip" data-target="input-district" data-value="宝山区">宝山区</span>
-          <span class="quick-tag-chip" data-target="input-district" data-value="市区及其他">市区及其他</span>
-        </div>
-      </div>
-
-      <div class="form-item">
         <label class="form-label">所在学校全称 <span class="required-star">*</span></label>
         <input type="text" id="input-school" class="form-input" placeholder="例如：上海市崇明中学">
       </div>
@@ -77,17 +66,6 @@
       <div class="form-item">
         <label class="form-label">学校详细路名与门牌（便于地图精准定位）</label>
         <input type="text" id="input-schoolAddress" class="form-input" placeholder="例如：城桥镇翠竹路86号">
-      </div>
-
-      <div class="form-item">
-        <label class="form-label">任教学科</label>
-        <input type="text" id="input-subject" class="form-input" value="物理" placeholder="默认为物理">
-        <div class="quick-tags">
-          <span class="quick-tag-chip" data-target="input-subject" data-value="物理">物理</span>
-          <span class="quick-tag-chip" data-target="input-subject" data-value="科学">科学</span>
-          <span class="quick-tag-chip" data-target="input-subject" data-value="信息科技">信息科技</span>
-          <span class="quick-tag-chip" data-target="input-subject" data-value="化学/生物">化学/生物</span>
-        </div>
       </div>
 
       <div class="form-item">
@@ -159,13 +137,14 @@
       <div class="form-item">
         <label class="form-label">常用国内 AI 编程 / 代码开发工具（可多选）</label>
         <div class="chip-group">
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="GLM CodeGeeX/Coder" data-multi="true">GLM CodeGeeX</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="豆包MarsCode" data-multi="true">豆包MarsCode</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="Trae" data-multi="true">Trae (字节)</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="Kimi Coder" data-multi="true">Kimi Coder</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="文心快码(Comate)" data-multi="true">文心快码</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="iFlyCode" data-multi="true">iFlyCode</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="其他" data-multi="true">其他</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="智谱 CodeGeeX" data-multi="true">智谱 CodeGeeX</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="字节 Trae" data-multi="true">字节 Trae</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="豆包 MarsCode" data-multi="true">豆包 MarsCode</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="阿里 通义灵码" data-multi="true">阿里 通义灵码</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="百度 文心快码" data-multi="true">百度 文心快码</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="腾讯云 AI代码助手" data-multi="true">腾讯云代码助手</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="讯飞 iFlyCode" data-multi="true">讯飞 iFlyCode</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="其他代码工具" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -176,8 +155,10 @@
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Claude" data-multi="true">Claude</div>
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Cursor" data-multi="true">Cursor</div>
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Claude Code" data-multi="true">Claude Code</div>
+          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="GitHub Copilot" data-multi="true">GitHub Copilot</div>
+          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Windsurf" data-multi="true">Windsurf</div>
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="AntiGravity" data-multi="true">AntiGravity</div>
-          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="其他" data-multi="true">其他</div>
+          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="其他国际工具" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -312,11 +293,11 @@
 
       <div class="form-item">
         <label class="form-label">实验痛点与具体需求补充（选填）</label>
-        <textarea id="input-experimentPainDetail" class="form-textarea" placeholder="例如：力学小车打点计时器纸带分析耗时，希望能用手机录像自动测加速度..."></textarea>
+        <textarea id="input-experimentPainDetail" class="form-textarea" placeholder="填写您在物理实验中的具体痛点或工具开发诉求..."></textarea>
       </div>
     </div>
 
-    <!-- Step 5: 创新项目现状与现场期望 (合并精简) -->
+    <!-- Step 5: 创新项目现状与现场期望 -->
     <div class="step-card" id="step-5">
       <div class="step-title-row">
         <div class="step-number">5</div>
@@ -353,12 +334,12 @@
 
       <div class="form-item">
         <label class="form-label">最希望开发的物理实验工具或教学痛点（选填）</label>
-        <textarea id="input-dreamTool" class="form-textarea" placeholder="例如：希望用手机摄像头直接识别各种电表读数或自动拟合单摆周期曲线..."></textarea>
+        <textarea id="input-dreamTool" class="form-textarea"></textarea>
       </div>
 
       <div class="form-item">
-        <label class="form-label">你希望本次讲座重点演示或实操哪些内容？（现场实时调优参考）</label>
-        <textarea id="input-lectureExpectation" class="form-textarea" placeholder="例如：希望能手把手演练如何用AI写出一个带摄像头识别的物理小工具..."></textarea>
+        <label class="form-label">你希望本次讲座重点演示或实操哪些内容？（及其他）</label>
+        <textarea id="input-lectureExpectation" class="form-textarea"></textarea>
       </div>
     </div>
 
@@ -366,14 +347,14 @@
     <div class="wizard-nav">
       <button class="btn btn-secondary" id="btnPrev" style="display: none;">上一步</button>
       <button class="btn btn-primary" id="btnNext">下一步</button>
-      <button class="btn btn-primary" id="btnSubmit" style="display: none;">确认提交调研</button>
+      <button class="btn btn-primary" id="btnSubmit" style="display: none;">确认提交问卷</button>
     </div>
 
     <!-- 提交成功状态卡片 -->
     <div class="success-screen" id="successScreen">
       <div class="success-icon">✓</div>
-      <h2 class="success-title">调研数据提交成功！</h2>
-      <p class="success-desc">感谢您的参与，您的能力画像与实验需求已实时同步至讲师大屏，讲师将根据现场数据动态调整演练重点。</p>
+      <h2 class="success-title">交流数据提交成功！</h2>
+      <p class="success-desc">感谢您的参与，您的能力画像与实验需求已实时同步至现场大屏，主讲人将根据现场数据动态调整演练重点。</p>
 
       <div class="success-metrics-card">
         <div class="success-metric-row">

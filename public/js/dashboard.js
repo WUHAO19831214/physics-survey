@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentSessionId = '2026-chongming-ai-physics';
   let rawData = [];
   let pollTimer = null;
-  let currentMapView = 'shanghai'; // 'shanghai' | 'chongming'
+  let currentMapView = 'chongming'; // 默认直接聚焦崇明区学校分布
   let chongmingSchools = [];
   let currentAiEngine = 'ollama'; // 'ollama' | 'rule'
 
@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initMapGeoJSON();
   await loadChongmingSchools();
   initCharts();
+  switchMapView('chongming'); // 默认激活崇明放大视图
   await loadSessions();
   await refreshData(false);
 
@@ -370,23 +371,98 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
       mapChart.setOption(option, true);
     } else {
-      const schoolCounts = {};
+      // 崇明全域学校与路名精确定位解析
+      const schoolStats = {};
+      
+      // 崇明各乡镇基准经纬度字典
+      const townCoords = {
+        '城桥': [121.3982, 31.6285],
+        '堡镇': [121.6120, 31.5420],
+        '陈家镇': [121.9050, 31.5050],
+        '东滩': [121.9050, 31.5050],
+        '新河': [121.5200, 31.5600],
+        '庙镇': [121.3100, 31.6900],
+        '三星': [121.2400, 31.7500],
+        '港西': [121.4510, 31.6820],
+        '港沿': [121.6800, 31.5800],
+        '向化': [121.7800, 31.5500],
+        '中兴': [121.8400, 31.5100],
+        '建设': [121.4500, 31.6400],
+        '绿华': [121.1800, 31.7800],
+        '新海': [121.2800, 31.8100],
+        '东平': [121.4800, 31.7200],
+        '长兴': [121.7200, 31.4000],
+        '横沙': [121.8600, 31.3400]
+      };
+
+      // 初始化已知预设学校
+      chongmingSchools.forEach(s => {
+        schoolStats[s.name] = {
+          name: s.name,
+          coord: s.coord,
+          address: s.address,
+          count: 0
+        };
+      });
+
+      // 智能匹配每一条教师提交记录
       records.forEach(r => {
-        const sch = r.basicInfo?.school;
-        if (sch) {
-          schoolCounts[sch] = (schoolCounts[sch] || 0) + 1;
+        const sch = (r.basicInfo?.school || '').trim();
+        const addr = (r.basicInfo?.schoolAddress || '').trim();
+        if (!sch && !addr) return;
+
+        let matchedKey = null;
+
+        // 1. 优先按已知学校名称或别名精确匹配
+        for (const s of chongmingSchools) {
+          if (sch === s.name || (s.aliases && s.aliases.some(a => sch.includes(a) || addr.includes(a)))) {
+            matchedKey = s.name;
+            break;
+          }
+        }
+
+        // 2. 次级按学校名称子串包含匹配
+        if (!matchedKey) {
+          for (const s of chongmingSchools) {
+            if (sch.includes(s.name.replace('崇明区', '').replace('上海市', ''))) {
+              matchedKey = s.name;
+              break;
+            }
+          }
+        }
+
+        if (matchedKey) {
+          schoolStats[matchedKey].count++;
+          if (addr && !schoolStats[matchedKey].address.includes(addr)) {
+            schoolStats[matchedKey].address = addr;
+          }
+        } else {
+          // 3. 自定义学校或新路名：智能解析镇/路坐标打点
+          let coord = [121.3982, 31.6285]; // 默认城桥
+          for (const [tName, tCoord] of Object.entries(townCoords)) {
+            if (sch.includes(tName) || addr.includes(tName)) {
+              coord = tCoord;
+              break;
+            }
+          }
+          const customName = sch || addr || '崇明参训学校';
+          if (!schoolStats[customName]) {
+            schoolStats[customName] = {
+              name: customName,
+              coord: coord,
+              address: addr || '崇明区',
+              count: 0
+            };
+          }
+          schoolStats[customName].count++;
         }
       });
 
-      const scatterData = [];
-      chongmingSchools.forEach(s => {
-        const count = schoolCounts[s.name] || 0;
-        scatterData.push({
-          name: s.name,
-          value: [...s.coord, count],
-          address: s.address
-        });
-      });
+      const scatterData = Object.values(schoolStats).map(s => ({
+        name: s.name,
+        value: [...s.coord, s.count],
+        address: s.address
+      }));
 
       const option = {
         tooltip: {
@@ -394,7 +470,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           formatter: (params) => {
             if (params.seriesType === 'scatter' || params.seriesType === 'effectScatter') {
               const count = params.value[2] || 0;
-              return `<strong>🏫 ${params.name}</strong><br/>提交教师: <span style="color:#00f2fe;font-weight:bold;">${count}</span> 人<br/>地址: ${params.data.address || '崇明区'}`;
+              return `<strong>🏫 ${params.name}</strong><br/>参训教师: <span style="color:#00f2fe;font-weight:bold;">${count}</span> 人<br/>详细地址: ${params.data.address || '崇明区'}`;
             }
             return `<strong>${params.name}</strong><br/>崇明三岛区域`;
           },
@@ -421,14 +497,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         series: [
           {
-            name: '重点学校分布',
+            name: '活跃参训学校',
             type: 'effectScatter',
             coordinateSystem: 'geo',
             data: scatterData.filter(d => d.value[2] > 0),
-            symbolSize: (val) => Math.max(12, Math.min(28, 12 + val[2] * 4)),
+            symbolSize: (val) => Math.max(14, Math.min(30, 14 + val[2] * 5)),
             showEffectOn: 'render',
-            rippleEffect: { brushType: 'stroke', scale: 3 },
-            itemStyle: { color: '#00f2fe', shadowBlur: 10, shadowColor: '#00f2fe' },
+            rippleEffect: { brushType: 'stroke', scale: 3.5 },
+            itemStyle: { color: '#00f2fe', shadowBlur: 12, shadowColor: '#00f2fe' },
             label: {
               show: true,
               formatter: '{b}',
@@ -440,12 +516,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             zlevel: 2
           },
           {
-            name: '其他学校定位',
+            name: '崇明重点学校',
             type: 'scatter',
             coordinateSystem: 'geo',
             data: scatterData.filter(d => d.value[2] === 0),
             symbolSize: 8,
-            itemStyle: { color: '#8b9bb4', opacity: 0.6 },
+            itemStyle: { color: '#8b9bb4', opacity: 0.5 },
             label: { show: false },
             zlevel: 1
           }

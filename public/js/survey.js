@@ -125,15 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const school = document.getElementById('input-school').value.trim();
       if (!school) {
-        alert('请填写所在学校名称（如：上海市崇明中学）');
+        alert('请填写所在学校全称（如：上海市崇明中学）');
         document.getElementById('input-school').focus();
         return false;
       }
       formData.basicInfo.school = school;
       formData.basicInfo.name = document.getElementById('input-name').value.trim() || '匿名教师';
-      formData.basicInfo.district = document.getElementById('input-district').value.trim() || '崇明区';
+      formData.basicInfo.district = '崇明区';
       formData.basicInfo.schoolAddress = document.getElementById('input-schoolAddress').value.trim();
-      formData.basicInfo.subject = document.getElementById('input-subject').value.trim() || '物理';
+      formData.basicInfo.subject = '物理';
       formData.basicInfo.teachingYears = Number(document.getElementById('input-teachingYears').value) || 0;
       return true;
     }
@@ -241,10 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function bindInputs() {
     const inputMap = [
       { id: 'input-name', path: 'basicInfo.name' },
-      { id: 'input-district', path: 'basicInfo.district' },
       { id: 'input-school', path: 'basicInfo.school' },
       { id: 'input-schoolAddress', path: 'basicInfo.schoolAddress' },
-      { id: 'input-subject', path: 'basicInfo.subject' },
       { id: 'input-teachingYears', path: 'basicInfo.teachingYears' },
       { id: 'input-experimentPainDetail', path: 'needs.experimentPainDetail' },
       { id: 'input-projectName', path: 'project.name' },
@@ -295,16 +293,14 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.assign(formData, saved);
 
         // 还原 input 框内容
-        if (formData.basicInfo.name) document.getElementById('input-name').value = formData.basicInfo.name;
-        if (formData.basicInfo.district) document.getElementById('input-district').value = formData.basicInfo.district;
-        if (formData.basicInfo.school) document.getElementById('input-school').value = formData.basicInfo.school;
-        if (formData.basicInfo.schoolAddress) document.getElementById('input-schoolAddress').value = formData.basicInfo.schoolAddress;
-        if (formData.basicInfo.subject) document.getElementById('input-subject').value = formData.basicInfo.subject;
-        if (formData.basicInfo.teachingYears) document.getElementById('input-teachingYears').value = formData.basicInfo.teachingYears;
-        if (formData.needs.experimentPainDetail) document.getElementById('input-experimentPainDetail').value = formData.needs.experimentPainDetail;
-        if (formData.project.name) document.getElementById('input-projectName').value = formData.project.name;
-        if (formData.openResponses.dreamTool) document.getElementById('input-dreamTool').value = formData.openResponses.dreamTool;
-        if (formData.openResponses.lectureExpectation) document.getElementById('input-lectureExpectation').value = formData.openResponses.lectureExpectation;
+        if (formData.basicInfo.name && document.getElementById('input-name')) document.getElementById('input-name').value = formData.basicInfo.name;
+        if (formData.basicInfo.school && document.getElementById('input-school')) document.getElementById('input-school').value = formData.basicInfo.school;
+        if (formData.basicInfo.schoolAddress && document.getElementById('input-schoolAddress')) document.getElementById('input-schoolAddress').value = formData.basicInfo.schoolAddress;
+        if (formData.basicInfo.teachingYears && document.getElementById('input-teachingYears')) document.getElementById('input-teachingYears').value = formData.basicInfo.teachingYears;
+        if (formData.needs.experimentPainDetail && document.getElementById('input-experimentPainDetail')) document.getElementById('input-experimentPainDetail').value = formData.needs.experimentPainDetail;
+        if (formData.project.name && document.getElementById('input-projectName')) document.getElementById('input-projectName').value = formData.project.name;
+        if (formData.openResponses.dreamTool && document.getElementById('input-dreamTool')) document.getElementById('input-dreamTool').value = formData.openResponses.dreamTool;
+        if (formData.openResponses.lectureExpectation && document.getElementById('input-lectureExpectation')) document.getElementById('input-lectureExpectation').value = formData.openResponses.lectureExpectation;
 
         // 还原单选/多选高亮
         document.querySelectorAll('.select-chip').forEach(chip => {
