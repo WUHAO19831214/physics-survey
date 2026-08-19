@@ -1,252 +1,137 @@
 [
   {
-    "id": "rec_cm_20260817_001",
     "sessionId": "2026-chongming-ai-physics",
-    "submittedAt": "2026-08-17T09:15:20.000Z",
+    "basicInfo": {
+      "name": "翁老师",
+      "gender": "男",
+      "province": "上海市",
+      "district": "崇明区",
+      "school": "上海市崇明中学",
+      "schoolAddress": "城桥镇翠竹路86号",
+      "subject": "物理",
+      "schoolStages": [
+        "初中",
+        "高中"
+      ],
+      "grades": [
+        "七年级",
+        "高一"
+      ],
+      "teachingYears": 21,
+      "roles": [
+        "教研员"
+      ]
+    },
+    "aiUsage": {
+      "tools": {
+        "domesticGeneral": [
+          "DeepSeek"
+        ],
+        "domesticCoding": [
+          "GLM CodeGeeX/Coder"
+        ],
+        "foreignTools": [
+          "ChatGPT"
+        ]
+      },
+      "experience": "1-2年",
+      "frequency": "每周1-2次"
+    },
+    "aiCapability": {
+      "contentGeneration": 3,
+      "multimedia": 3,
+      "dataAnalysis": 3,
+      "programming": 2,
+      "experimentDev": 2
+    },
+    "needs": {
+      "workNeeds": [
+        "备课与教学设计"
+      ],
+      "experimentNeeds": [
+        "实验现象模拟与交互"
+      ],
+      "experimentPainDetail": ""
+    },
+    "project": {
+      "stage": "暂无想法",
+      "name": "",
+      "categories": [],
+      "difficulties": [
+        "AI生成的代码调试不通"
+      ]
+    },
+    "openResponses": {
+      "dreamTool": "",
+      "teachingPainPoint": "",
+      "lectureExpectation": ""
+    },
+    "submittedAt": "2026-08-17T03:51:31.660Z",
+    "id": "rec_1786938691660_2k0c4u"
+  },
+  {
+    "sessionId": "2026-chongming-ai-physics",
     "basicInfo": {
       "name": "张老师",
       "gender": "男",
       "province": "上海市",
       "district": "崇明区",
       "school": "上海市崇明中学",
-      "schoolAddress": "崇明区城桥镇翠竹路86号",
+      "schoolAddress": "城桥镇翠竹路86号",
       "subject": "物理",
-      "schoolStages": ["高中"],
-      "grades": ["高一", "高二"],
-      "teachingYears": 14,
-      "roles": ["教研组长", "骨干教师"]
+      "grades": [
+        "高三"
+      ],
+      "teachingYears": 11,
+      "roles": [
+        "骨干名师"
+      ]
     },
     "aiUsage": {
       "tools": {
-        "domesticGeneral": ["DeepSeek", "Kimi", "豆包", "通义千问"],
-        "domesticCoding": ["GLM CodeGeeX/Coder", "豆包MarsCode", "Trae"],
-        "foreignTools": ["ChatGPT", "Cursor", "Claude Code"]
+        "domesticGeneral": [
+          "DeepSeek"
+        ],
+        "domesticCoding": [
+          "GLM CodeGeeX/Coder"
+        ],
+        "foreignTools": [
+          "ChatGPT"
+        ]
       },
-      "experience": "1-2年",
-      "frequency": "每天使用"
+      "experience": "从未使用",
+      "frequency": "几乎不用"
     },
     "aiCapability": {
-      "contentGeneration": 4,
-      "multimedia": 4,
-      "dataAnalysis": 3,
-      "programming": 3,
-      "experimentDev": 3
-    },
-    "needs": {
-      "workNeeds": ["备课与教学设计", "实验教学工具开发", "论文教科研"],
-      "experimentNeeds": ["运动轨迹分析与追踪", "DIS传感器数据实时绘图", "物理场可视化"],
-      "experimentPainDetail": "高中带电粒子在复合场中的运动轨迹抽象，希望用AI做交互式三维物理场模拟"
-    },
-    "project": {
-      "stage": "正在开发",
-      "name": "基于Webcam的单摆运动自动测定与周期拟合工具",
-      "categories": ["物理实验", "数字化实验", "教学工具"],
-      "difficulties": ["AI生成的代码调试不通", "不会接入摄像头/传感器"]
-    },
-    "openResponses": {
-      "dreamTool": "手机摄像头对着演示实验就能直接标出小球实时速度、切向加速度和能量损耗曲线",
-      "teachingPainPoint": "DIS实验传感器线缆繁琐，学生缺乏从原始视频到数据拟合的完整探究体验",
-      "lectureExpectation": "希望能现场演示如何用AI编写一个能识别手机录像中小车运动的轻量Web网页"
-    }
-  },
-  {
-    "id": "rec_cm_20260817_002",
-    "sessionId": "2026-chongming-ai-physics",
-    "submittedAt": "2026-08-17T09:22:11.000Z",
-    "basicInfo": {
-      "name": "李老师",
-      "gender": "女",
-      "province": "上海市",
-      "district": "崇明区",
-      "school": "上海市扬子中学",
-      "schoolAddress": "崇明区城桥镇北门路198号",
-      "subject": "物理",
-      "schoolStages": ["高中"],
-      "grades": ["高一"],
-      "teachingYears": 6,
-      "roles": ["普通教师"]
-    },
-    "aiUsage": {
-      "tools": {
-        "domesticGeneral": ["DeepSeek", "Kimi", "豆包", "腾讯元宝"],
-        "domesticCoding": ["豆包MarsCode", "Kimi Coder"],
-        "foreignTools": ["ChatGPT"]
-      },
-      "experience": "6-12个月",
-      "frequency": "每周多次"
-    },
-    "aiCapability": {
-      "contentGeneration": 4,
-      "multimedia": 3,
-      "dataAnalysis": 2,
+      "contentGeneration": 2,
+      "multimedia": 2,
+      "dataAnalysis": 1,
       "programming": 2,
-      "experimentDev": 1
-    },
-    "needs": {
-      "workNeeds": ["备课与教学设计", "命题与作业", "实验教学工具开发"],
-      "experimentNeeds": ["仪表示数OCR识别", "实验现象模拟与交互", "传统仪器数字化"],
-      "experimentPainDetail": "机械秒表与游标卡尺读数教学时，全班40多人看不清细节，希望手机对准实时放大并读数"
-    },
-    "project": {
-      "stage": "正在构思",
-      "name": "微小位移激光放大实验的图像数据处理插件",
-      "categories": ["物理实验", "教学工具"],
-      "difficulties": ["不会编写代码", "缺乏案例", "不知道如何开始"]
-    },
-    "openResponses": {
-      "dreamTool": "自动把学生课桌上的各种电表指针拍照并批量统计全班读数正确率的随堂工具",
-      "teachingPainPoint": "学生动手做实验时错误读数很多，老师一个人在实验室巡视不过来",
-      "lectureExpectation": "零编程基础如何向AI提出准确的实验开发提示词（Prompt）"
-    }
-  },
-  {
-    "id": "rec_cm_20260817_003",
-    "sessionId": "2026-chongming-ai-physics",
-    "submittedAt": "2026-08-17T09:30:45.000Z",
-    "basicInfo": {
-      "name": "王老师",
-      "gender": "男",
-      "province": "上海市",
-      "district": "崇明区",
-      "school": "崇明区东门中学",
-      "schoolAddress": "崇明区城桥镇东门路128号",
-      "subject": "物理",
-      "schoolStages": ["初中"],
-      "grades": ["八年级", "九年级"],
-      "teachingYears": 19,
-      "roles": ["备课组长", "高级教师"]
-    },
-    "aiUsage": {
-      "tools": {
-        "domesticGeneral": ["DeepSeek", "智谱清言", "通义千问", "文心一言"],
-        "domesticCoding": ["GLM CodeGeeX/Coder", "文心快码(Comate)"],
-        "foreignTools": ["AntiGravity", "其他"]
-      },
-      "experience": "1-2年",
-      "frequency": "每周多次"
-    },
-    "aiCapability": {
-      "contentGeneration": 5,
-      "multimedia": 3,
-      "dataAnalysis": 4,
-      "programming": 3,
       "experimentDev": 2
     },
     "needs": {
-      "workNeeds": ["学情诊断", "实验教学工具开发", "论文教科研", "命题与作业"],
-      "experimentNeeds": ["运动轨迹分析与追踪", "DIS传感器数据实时绘图", "传统仪器数字化"],
-      "experimentPainDetail": "初二声学和光学实验学生难以定量记录，希望能用平板麦克风和摄像头实时采波形和光路"
-    },
-    "project": {
-      "stage": "已经尝试",
-      "name": "音调响度音频波形AI实时可视化助手",
-      "categories": ["物理实验", "学生学习工具"],
-      "difficulties": ["不会接入摄像头/传感器", "AI生成的代码调试不通"]
-    },
-    "openResponses": {
-      "dreamTool": "让初中学生在操场上测百米跑时，手机一扫直接生成位移-时间图像并算出瞬时加速度",
-      "teachingPainPoint": "传统物理实验数据记录在纸上，无法在课堂40分钟内完成深度建模与误差分析",
-      "lectureExpectation": "希望了解怎么把AI做出的实验工具真正落地到常规物理课堂中"
-    }
-  },
-  {
-    "id": "rec_cm_20260817_004",
-    "sessionId": "2026-chongming-ai-physics",
-    "submittedAt": "2026-08-17T09:41:02.000Z",
-    "basicInfo": {
-      "name": "陈老师",
-      "gender": "女",
-      "province": "上海市",
-      "district": "崇明区",
-      "school": "上海市实验学校附属东滩学校",
-      "schoolAddress": "崇明区陈家镇安通路100号",
-      "subject": "物理",
-      "schoolStages": ["初中", "高中"],
-      "grades": ["八年级", "高一"],
-      "teachingYears": 4,
-      "roles": ["青年骨干", "普通教师"]
-    },
-    "aiUsage": {
-      "tools": {
-        "domesticGeneral": ["DeepSeek", "Kimi", "豆包", "腾讯元宝"],
-        "domesticCoding": ["Trae", "豆包MarsCode", "Kimi Coder"],
-        "foreignTools": ["Claude", "Cursor", "Windsurf"]
-      },
-      "experience": "6-12个月",
-      "frequency": "每天使用"
-    },
-    "aiCapability": {
-      "contentGeneration": 4,
-      "multimedia": 4,
-      "dataAnalysis": 3,
-      "programming": 3,
-      "experimentDev": 3
-    },
-    "needs": {
-      "workNeeds": ["备课与教学设计", "实验教学工具开发", "论文教科研"],
-      "experimentNeeds": ["运动轨迹分析与追踪", "物理场可视化", "实验现象模拟与交互"],
-      "experimentPainDetail": "想要开发一个基于手机陀螺仪的简易向心加速度探究小程序"
-    },
-    "project": {
-      "stage": "正在开发",
-      "name": "东滩湿地生态与物理环境传感器实时看板",
-      "categories": ["数字化实验", "教学工具", "物理实验"],
-      "difficulties": ["不会调试", "缺乏硬件", "缺团队"]
-    },
-    "openResponses": {
-      "dreamTool": "利用浏览器Web API调用手机传感器，直接进行圆周运动向心力探究实验",
-      "teachingPainPoint": "实验室专用传感器价格昂贵，无法实现人手一套课后探究",
-      "lectureExpectation": "手把手演练AI协作开发物理小实验原型的实战步骤"
-    }
-  },
-  {
-    "id": "rec_cm_20260817_005",
-    "sessionId": "2026-chongming-ai-physics",
-    "submittedAt": "2026-08-17T09:48:33.000Z",
-    "basicInfo": {
-      "name": "匿名",
-      "gender": "男",
-      "province": "上海市",
-      "district": "崇明区",
-      "school": "崇明区堡镇中学",
-      "schoolAddress": "崇明区堡镇石岛路251号",
-      "subject": "物理",
-      "schoolStages": ["高中"],
-      "grades": ["高二", "高三"],
-      "teachingYears": 22,
-      "roles": ["教研组长", "市级名师工作室成员"]
-    },
-    "aiUsage": {
-      "tools": {
-        "domesticGeneral": ["DeepSeek", "通义千问", "文心一言"],
-        "domesticCoding": ["GLM CodeGeeX/Coder"],
-        "foreignTools": ["ChatGPT"]
-      },
-      "experience": "3-6个月",
-      "frequency": "每周1-2次"
-    },
-    "aiCapability": {
-      "contentGeneration": 3,
-      "multimedia": 2,
-      "dataAnalysis": 2,
-      "programming": 1,
-      "experimentDev": 1
-    },
-    "needs": {
-      "workNeeds": ["命题与作业", "论文教科研", "实验教学工具开发"],
-      "experimentNeeds": ["传统仪器数字化", "仪表示数OCR识别", "实验现象模拟与交互"],
-      "experimentPainDetail": "高考实验题中的多用电表、示波器读数模拟与难点诊断"
+      "workNeeds": [
+        "备课与教学设计"
+      ],
+      "experimentNeeds": [
+        "运动轨迹分析与追踪"
+      ],
+      "experimentPainDetail": ""
     },
     "project": {
       "stage": "暂无想法",
       "name": "",
       "categories": [],
-      "difficulties": ["不会编程", "不知道如何开始", "不知道如何转化成课题 / 论文"]
+      "difficulties": [
+        "不会编写代码"
+      ]
     },
     "openResponses": {
-      "dreamTool": "能够智能诊断学生在电学实验连线图中的短路和断路错误的AI助教",
-      "teachingPainPoint": "高三复习实验时无法重新搭建所有实物装置，虚拟仿真往往千篇一律不够真实",
-      "lectureExpectation": "如何把AI开发出的实验创新工具转化为区级/市级教科研课题和论文成果"
-    }
+      "dreamTool": "",
+      "teachingPainPoint": "",
+      "lectureExpectation": ""
+    },
+    "submittedAt": "2026-08-17T03:57:56.860Z",
+    "id": "rec_1786939076860_tl49q2"
   }
 ]

@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>物理教师 AI 创新能力画像与实验开发需求大屏看板</title>
+  <title>讲座现场互动与数据评价看板 - 物理教师 AI 创新与实验开发</title>
   
   <!-- 引入现代字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
   
-  <!-- 引入 ECharts -->
+  <!-- 引入 ECharts 5 -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 
-  <!-- 样式 -->
+  <!-- 样式表 -->
   <link rel="stylesheet" href="/public/css/style.css">
   <link rel="stylesheet" href="/public/css/dashboard.css">
 </head>
@@ -21,226 +21,244 @@
 
   <div class="dashboard-container">
     
-    <!-- 顶部指挥控制栏 -->
+    <!-- 顶部导航与指挥状态栏 (完全参考原版) -->
     <header class="dash-header">
-      <div class="dash-title-group">
-        <div class="dash-logo-icon">⚡</div>
-        <div>
-          <h1 class="dash-title-main">物理教师 AI 创新能力画像与实验开发需求大屏</h1>
-          <p class="dash-title-sub">AI Teacher Innovation Survey & Research Dashboard</p>
-        </div>
+      <div class="header-logo">
+        <span class="blinker"></span>
+        <h1>讲座现场互动与数据评价看板</h1>
+        <select id="sessionSelect" class="session-selector-mini" title="切换研训批次"></select>
       </div>
 
-      <div class="dash-controls">
-        <!-- 批次选择 -->
-        <select id="sessionSelect" class="session-selector"></select>
-
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted);">
-          <span class="pulse-dot"></span>
-          <span>实时流连接中</span>
+      <div class="status-panel">
+        <button id="btnShowQr" class="btn-qr-pill" title="查看教师手机填报二维码与公网穿透链接">
+          <span style="font-size: 1rem;">📱</span>
+          <span>教师填报码与外网链接</span>
+        </button>
+        <div class="status-item">
+          <span>数据连接:</span>
+          <span class="status-badge-green" id="connStatus">本地服务</span>
         </div>
-
-        <button class="btn btn-secondary" id="btnRefresh" title="手动刷新">🔄 刷新</button>
-        <button class="btn btn-secondary" id="btnExportAnonCsv" title="导出学术论文脱敏 CSV 数据">📄 论文脱敏 CSV</button>
-        <button class="btn btn-secondary" id="btnExportCsv" title="导出全量明细 CSV">📊 全量 CSV</button>
-        <button class="btn btn-secondary" id="btnExportJson" title="导出原始 JSON">📦 JSON 备份</button>
+        <div class="status-item">
+          <span>已提交教师数:</span>
+          <span class="stat-highlight" id="kpiCount">0</span>
+        </div>
+        <div class="status-item">
+          <span>平均教龄:</span>
+          <span class="stat-highlight" id="kpiAvgYears" style="color: #70a1ff;">0</span> 年
+        </div>
+        <div class="status-item">
+          <span>AI使用率:</span>
+          <span class="stat-highlight" id="kpiAiRate" style="color: #2ed573;">0%</span>
+        </div>
+        <div class="status-item">
+          <span class="clock-display" id="liveClock">11:30:00</span>
+        </div>
       </div>
     </header>
 
-    <!-- 顶部核心指标 KPI 仪表盘 -->
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-label">已提交教师数</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiCount">0</span>
-          <span class="kpi-unit">人</span>
-        </div>
-        <div class="kpi-sparkline">👥</div>
-      </div>
+    <!-- 浮动通知容器 -->
+    <div class="toast-container" id="toastContainer"></div>
 
-      <div class="kpi-card">
-        <div class="kpi-label">平均实际教龄</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiAvgYears">0</span>
-          <span class="kpi-unit">年</span>
-        </div>
-        <div class="kpi-sparkline">⏳</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-label">AI 工具使用率</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiAiRate">0%</span>
-        </div>
-        <div class="kpi-sparkline">🤖</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-label">AI 编程/开发尝试率</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiCodingRate" style="color: var(--accent-cyan);">0%</span>
-        </div>
-        <div class="kpi-sparkline">💻</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-label">实验工具开发需求率</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiExpDemandRate" style="color: var(--accent-orange);">0%</span>
-        </div>
-        <div class="kpi-sparkline">🔬</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-label">正在构思/开展项目率</div>
-        <div class="kpi-value-row">
-          <span class="kpi-value" id="kpiProjectRate" style="color: var(--accent-green);">0%</span>
-        </div>
-        <div class="kpi-sparkline">🚀</div>
-      </div>
-    </div>
-
-    <!-- 主体三大列网格 -->
-    <div class="dash-main-grid">
+    <!-- 上半部分两大核心卡片 (地图分布 + AI核心关注挖掘) -->
+    <div class="dash-top-grid">
       
-      <!-- 左列：地域分布与基础教龄画像 -->
-      <div class="dash-column">
-        <!-- 崇明 / 上海地域分布图 -->
-        <div class="dash-card" style="flex: 1.2;">
-          <div class="dash-card-header">
-            <div class="card-heading">
-              <span class="card-heading-dot"></span>
-              <span>参训教师来源地域分布 (上海 / 崇明)</span>
-            </div>
-            <span class="tag">实时定位</span>
-          </div>
-          <div id="mapChart" class="chart-box"></div>
-        </div>
-
-        <!-- 教龄结构分布图 -->
-        <div class="dash-card" style="flex: 0.9;">
-          <div class="dash-card-header">
-            <div class="card-heading">
-              <span class="card-heading-dot"></span>
-              <span>教师教龄结构阶梯分布</span>
+      <!-- 左卡片：参训教师地域分布 (上海 / 崇明两级真实地图) -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>参训教师地域分布</span>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="card-subtitle">精准解析地域输入，涟漪散点展示</span>
+            <div class="map-toggle-group">
+              <button id="btnMapShanghai" class="map-toggle-btn active">上海全市</button>
+              <button id="btnMapChongming" class="map-toggle-btn">崇明放大</button>
             </div>
           </div>
-          <div id="yearsChart" class="chart-box"></div>
         </div>
+        <div id="mapChart" class="map-box"></div>
       </div>
 
-      <!-- 中列：AI 5维能力画像、工具排行与项目漏斗 (核心科研与讲座重点) -->
-      <div class="dash-column">
-        <!-- 5 维能力雷达图 -->
-        <div class="dash-card" style="flex: 1.2;">
-          <div class="dash-card-header">
-            <div class="card-heading">
-              <span class="card-heading-dot"></span>
-              <span>教师 AI 创新能力 5 维画像 (AICP-PT 0-100标准分)</span>
-            </div>
-            <a href="/docs/scoring-method.md" target="_blank" class="tag tag-green" style="text-decoration: none;">算法规范 ↗</a>
-          </div>
-          <div id="radarChart" class="chart-box chart-box-large"></div>
+      <!-- 右卡片：AI 核心关注与困惑挖掘 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>AI 核心关注与困惑挖掘</span>
+          <span class="card-subtitle">从实验痛点到智能工具：AI协作开发赋能物理实验创新的实践与复现</span>
         </div>
 
-        <!-- AI 工具与项目漏斗双卡片并排 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1;">
-          <div class="dash-card">
-            <div class="dash-card-header">
-              <div class="card-heading">
-                <span class="card-heading-dot"></span>
-                <span>常用 AI 工具排行</span>
-              </div>
-            </div>
-            <div id="toolsChart" class="chart-box"></div>
-          </div>
-
-          <div class="dash-card">
-            <div class="dash-card-header">
-              <div class="card-heading">
-                <span class="card-heading-dot"></span>
-                <span>创新项目阶段漏斗</span>
-              </div>
-            </div>
-            <div id="projectFunnelChart" class="chart-box"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 右列：物理实验数字化诉求与现场 AI 讲座建议 -->
-      <div class="dash-column">
-        <!-- 物理实验创新需求 TOP 榜 -->
-        <div class="dash-card" style="flex: 1;">
-          <div class="dash-card-header">
-            <div class="card-heading">
-              <span class="card-heading-dot"></span>
-              <span>物理实验数字化开发需求 TOP 榜</span>
-            </div>
-            <span class="tag tag-orange">讲座演练重点</span>
-          </div>
-          <div id="expDemandChart" class="chart-box"></div>
+        <!-- 引擎切换栏 -->
+        <div class="engine-tabs-row">
+          <button class="engine-tab-btn active" id="tabOllama">本地 Ollama (gemma:4b) 引擎</button>
+          <button class="engine-tab-btn" id="tabRule">轻量本地规则聚类引擎</button>
         </div>
 
-        <!-- 讲座现场实时 AI 调优建议面板 -->
-        <div class="dash-card ai-advice-card" style="flex: 1.2;">
-          <div class="dash-card-header">
-            <div class="card-heading">
-              <span class="card-heading-dot" style="background: var(--accent-green);"></span>
-              <span>现场讲座实时调优策略建议</span>
-            </div>
-            <div class="ai-engine-status">
-              <span id="aiEngineLabel">分析引擎准备中...</span>
-            </div>
+        <!-- 状态指示与手动触发 -->
+        <div class="ai-status-row">
+          <div class="ai-status-indicator">
+            <span class="status-dot"></span>
+            <span id="aiStatusLabel">本地 AI 引擎准备就绪</span>
           </div>
+          <button class="btn-ai-action" id="btnRunAi">⚡ AI 分析核心需求</button>
+        </div>
 
-          <div class="ai-advice-content" id="aiAdviceContent">
-            正在智能挖掘教师开放期望与痛点...
-          </div>
+        <!-- AI 核心关键词发光云 -->
+        <div class="ai-wordcloud-box" id="aiWordCloud">
+          <span class="ai-cloud-word level-1">AI赋能教学</span>
+          <span class="ai-cloud-word level-2">运动轨迹分析</span>
+          <span class="ai-cloud-word level-1">仪表示数OCR</span>
+          <span class="ai-cloud-word level-3">数字化教研</span>
+          <span class="ai-cloud-word level-2">物理场模拟</span>
+          <span class="ai-cloud-word level-3">DIS传感器绘图</span>
+          <span class="ai-cloud-word level-2">微工具协作开发</span>
+        </div>
 
-          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <div class="ai-tag-group" id="aiKeywordTags"></div>
-            <button class="btn btn-secondary" id="btnRunAi" style="font-size: 0.75rem; padding: 4px 10px;">重新智能研判</button>
+        <!-- 实时教师关注点与策略洞察 -->
+        <div class="ai-insights-stream" id="aiStreamBox">
+          <div class="ai-stream-item">
+            <span class="ai-stream-time">[系统]</span> 正在等待教师提交或载入模拟数据以开展深度语义提炼...
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- 底部抽屉：参训教师明细数据检索 -->
-    <div class="dash-card drawer-card">
-      <div class="dash-card-header">
-        <div class="card-heading">
-          <span class="card-heading-dot"></span>
-          <span>参训教师明细与能力指数表</span>
-          <span class="tag" id="tableCount" style="margin-left: 8px;">0 / 0</span>
+    <!-- 中部 5 个紧凑图表并排卡片 (参考原版五联卡片) -->
+    <div class="dash-middle-grid">
+      
+      <!-- 1. AI 创新能力画像雷达图 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>AI 创新能力画像</span>
+          <span class="card-subtitle">5维标准分</span>
         </div>
-        <input type="text" id="tableSearchInput" class="form-input" style="width: 260px; padding: 6px 12px; font-size: 0.82rem;" placeholder="🔍 搜索姓名、学校、项目、痛点...">
+        <div id="radarChart" class="middle-chart-box"></div>
+      </div>
+
+      <!-- 2. 教龄分布情况 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>教龄分布情况</span>
+          <span class="card-subtitle">实际教龄阶梯</span>
+        </div>
+        <div id="yearsChart" class="middle-chart-box"></div>
+      </div>
+
+      <!-- 3. 常用 AI 工具排行 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>常用 AI 工具排行</span>
+          <span class="card-subtitle">国内通用与编程</span>
+        </div>
+        <div id="toolsChart" class="middle-chart-box"></div>
+      </div>
+
+      <!-- 4. 物理实验数字化需求 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>实验数字化需求</span>
+          <span class="card-subtitle">TOP 诉求排行</span>
+        </div>
+        <div id="expDemandChart" class="middle-chart-box"></div>
+      </div>
+
+      <!-- 5. 创新项目阶段漏斗 -->
+      <div class="dashboard-card">
+        <div class="card-title">
+          <span>创新项目阶段</span>
+          <span class="card-subtitle">转化漏斗</span>
+        </div>
+        <div id="projectFunnelChart" class="middle-chart-box"></div>
+      </div>
+
+    </div>
+
+    <!-- 下半部分：已提交教师数据明细 (完全参考原版底部布局与功能按键) -->
+    <div class="dashboard-card">
+      <div class="card-title">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>已提交教师数据明细</span>
+          <span class="tag" id="tableCount">0 / 0</span>
+        </div>
+        <div class="table-actions-row">
+          <input type="text" id="tableSearchInput" class="form-input" style="width: 200px; padding: 5px 10px; font-size: 0.8rem;" placeholder="🔍 搜索姓名/学校/项目...">
+          <button class="btn-table-mock" id="btnLoadMock">载入测试模拟数据</button>
+          <button class="btn-table-refresh" id="btnRefresh">🔄 刷新数据</button>
+          <button class="btn-table-mock" id="btnExportAnonCsv" style="border-color: #00f2fe; color: #00f2fe;">📄 论文脱敏 CSV</button>
+          <button class="btn-table-export-green" id="btnExportCsv">导出 Excel/CSV</button>
+          <button class="btn-table-clear-red" id="btnClearData">清空本次统计</button>
+        </div>
       </div>
 
       <div class="teacher-table-box">
         <table class="teacher-table">
           <thead>
             <tr>
-              <th>教师姓名</th>
-              <th>所在学校</th>
+              <th style="width: 45px;">序号</th>
+              <th>姓名</th>
+              <th>性别</th>
+              <th>任教学科</th>
+              <th>任教年级</th>
               <th>教龄</th>
-              <th>AI 经验</th>
-              <th>综合画像分</th>
+              <th>所在学校</th>
+              <th>角色 / 职务</th>
+              <th>AI 能力总分</th>
               <th>实验创新分</th>
-              <th>创新项目阶段</th>
-              <th>项目名称</th>
+              <th>项目状态</th>
+              <th>核心关注与讲座期望</th>
             </tr>
           </thead>
           <tbody id="teacherTableBody">
-            <!-- 动态填充 -->
+            <!-- 动态渲染 -->
           </tbody>
         </table>
       </div>
     </div>
 
   </div>
+  </div>
 
-  <!-- 引用本地 JS 模块 -->
+  <!-- 教师填报二维码与外网链接弹窗 (全屏大屏投屏支持) -->
+  <div class="qr-modal-overlay" id="qrModal" style="display: none;">
+    <div class="qr-modal-card">
+      <div class="qr-modal-header">
+        <div class="qr-modal-title">📱 教师手机端问卷填报与大屏投屏码</div>
+        <button class="qr-modal-close" id="btnCloseQr">&times;</button>
+      </div>
+      <div class="qr-modal-body">
+        <div class="qr-code-box">
+          <div id="qrCodeContainer" style="width: 220px; height: 220px; margin: 0 auto; background: #0d162b; padding: 10px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.4);"></div>
+          <div style="font-size: 0.8rem; color: var(--accent-cyan); text-align: center; margin-top: 8px; font-weight: 600;">微信 / 手机浏览器 扫码直达问卷</div>
+        </div>
+        <div class="qr-info-box">
+          <div class="qr-tag-row">
+            <span class="qr-status-badge" id="qrTunnelStatus">🌐 外网 HTTPS 穿透已就绪</span>
+            <span class="qr-sec-badge">🔒 仅开放问卷·大屏看板已物理隔离</span>
+          </div>
+
+          <div class="qr-url-group">
+            <label>1. 教师外网访问链接 (4G/5G/微信扫码直达)：</label>
+            <div class="qr-input-row">
+              <input type="text" id="publicSurveyUrl" readonly class="qr-input" value="正在获取外网穿透链接...">
+              <button class="btn-copy" id="btnCopyPublic">复制链接</button>
+            </div>
+          </div>
+
+          <div class="qr-url-group" style="margin-top: 12px;">
+            <label>2. 局域网同一 Wi-Fi 访问链接 (现场极速内网备用)：</label>
+            <div class="qr-input-row">
+              <input type="text" id="localSurveyUrl" readonly class="qr-input" value="正在获取局域网IP...">
+              <button class="btn-copy" id="btnCopyLocal">复制链接</button>
+            </div>
+          </div>
+
+          <div class="qr-tip-box">
+            💡 <strong>讲座投屏建议</strong>：讲座开场时，可将本二维码直接投影在大屏幕上。外网安全隔离已开启，老师填报完毕后仅可提交数据，无法窥探或访问讲师主控大看板。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入逻辑脚本 -->
+  <script src="/public/js/qrcode.min.js"></script>
   <script src="/public/js/radar-calculator.js"></script>
   <script src="/public/js/ai-analyser.js"></script>
   <script src="/public/js/dashboard.js"></script>

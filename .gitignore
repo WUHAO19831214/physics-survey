@@ -1,0 +1,11 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Binaries
+bin/
+
+# Temporary data
+data/tunnel.json
+.DS_Store
+*.log

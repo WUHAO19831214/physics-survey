@@ -1,14 +1,14 @@
 /**
- * 教师端手机问卷交互控制器 (Survey Wizard Controller)
+ * 教师端手机问卷交互控制器 (Survey Wizard Controller v2.3 - 5步精简版)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 1;
-  const totalSteps = 6;
+  const totalSteps = 5;
   const STORAGE_KEY = 'ai_teacher_survey_draft_v2';
   const SUBMIT_BACKUP_KEY = 'ai_teacher_survey_submissions_local';
 
-  // 初始化当前批次与表单状态
+  // 初始化当前批次与表单状态 (能力画像默认不选中任何项)
   const formData = {
     sessionId: '2026-chongming-ai-physics',
     basicInfo: {
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
       school: '',
       schoolAddress: '',
       subject: '物理',
-      schoolStages: [],
       grades: [],
       teachingYears: '',
-      roles: []
+      roles: [],
+      adminDuty: '无行政职务'
     },
     aiUsage: {
       tools: {
@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
       frequency: ''
     },
     aiCapability: {
-      contentGeneration: 3,
-      multimedia: 3,
-      dataAnalysis: 3,
-      programming: 2,
-      experimentDev: 2
+      contentGeneration: null,
+      multimedia: null,
+      dataAnalysis: null,
+      programming: null,
+      experimentDev: null
     },
     needs: {
       workNeeds: [],
@@ -150,6 +150,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return true;
     }
 
+    if (step === 3) {
+      const { contentGeneration, multimedia, dataAnalysis, programming, experimentDev } = formData.aiCapability;
+      if (!contentGeneration || !multimedia || !dataAnalysis || !programming || !experimentDev) {
+        alert('请为全部 5 项 AI 应用能力完成自评打分');
+        return false;
+      }
+      return true;
+    }
+
     if (step === 4) {
       formData.needs.experimentPainDetail = document.getElementById('input-experimentPainDetail').value.trim();
       return true;
@@ -157,12 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (step === 5) {
       formData.project.name = document.getElementById('input-projectName').value.trim();
-      return true;
-    }
-
-    if (step === 6) {
       formData.openResponses.dreamTool = document.getElementById('input-dreamTool').value.trim();
-      formData.openResponses.teachingPainPoint = document.getElementById('input-teachingPainPoint').value.trim();
       formData.openResponses.lectureExpectation = document.getElementById('input-lectureExpectation').value.trim();
       return true;
     }
@@ -199,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 绑定预填标签点击
+    // 绑定预填快捷标签点击
     document.querySelectorAll('.quick-tag-chip').forEach(tag => {
       tag.addEventListener('click', () => {
         const targetInputId = tag.dataset.target;
@@ -245,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 'input-experimentPainDetail', path: 'needs.experimentPainDetail' },
       { id: 'input-projectName', path: 'project.name' },
       { id: 'input-dreamTool', path: 'openResponses.dreamTool' },
-      { id: 'input-teachingPainPoint', path: 'openResponses.teachingPainPoint' },
       { id: 'input-lectureExpectation', path: 'openResponses.lectureExpectation' }
     ];
 
@@ -301,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (formData.needs.experimentPainDetail) document.getElementById('input-experimentPainDetail').value = formData.needs.experimentPainDetail;
         if (formData.project.name) document.getElementById('input-projectName').value = formData.project.name;
         if (formData.openResponses.dreamTool) document.getElementById('input-dreamTool').value = formData.openResponses.dreamTool;
-        if (formData.openResponses.teachingPainPoint) document.getElementById('input-teachingPainPoint').value = formData.openResponses.teachingPainPoint;
         if (formData.openResponses.lectureExpectation) document.getElementById('input-lectureExpectation').value = formData.openResponses.lectureExpectation;
 
         // 还原单选/多选高亮
@@ -318,11 +320,15 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        // 还原评分高亮
-        Object.entries(formData.aiCapability).forEach(([dim, score]) => {
-          const btn = document.querySelector(`.scale-btn[data-dim="${dim}"][data-score="${score}"]`);
-          if (btn) btn.classList.add('selected');
-        });
+        // 还原评分高亮 (仅当有明确保存值时)
+        if (formData.aiCapability) {
+          Object.entries(formData.aiCapability).forEach(([dim, score]) => {
+            if (score) {
+              const btn = document.querySelector(`.scale-btn[data-dim="${dim}"][data-score="${score}"]`);
+              if (btn) btn.classList.add('selected');
+            }
+          });
+        }
       }
     } catch (e) {}
   }
@@ -338,23 +344,18 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.submittedAt = new Date().toISOString();
     formData.id = `rec_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
 
-    let success = false;
-
     // 优先提交到后端 API
     try {
-      const res = await fetch('/api/submit', {
+      await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      if (res.ok) {
-        success = true;
-      }
     } catch (e) {
       console.warn('本地服务连接失败，已转存至离线 LocalStorage。', e);
     }
 
-    // 无论网络如何，本地均做持久化备份
+    // 本地持久化备份
     try {
       const localBackups = JSON.parse(localStorage.getItem(SUBMIT_BACKUP_KEY) || '[]');
       localBackups.push(formData);
@@ -374,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const successEl = document.getElementById('successScreen');
     successEl.style.display = 'block';
 
-    // 填充教师自评总结
     document.getElementById('resTeacherName').innerText = formData.basicInfo.name || '参训教师';
     document.getElementById('resSchool').innerText = formData.basicInfo.school || '上海市崇明区';
     document.getElementById('resExp').innerText = formData.aiUsage.experience || '初次体验';

@@ -11,8 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
   
   <!-- 样式表 -->
-  <link rel="stylesheet" href="/public/css/style.css">
-  <link rel="stylesheet" href="/public/css/mobile.css">
+  <link rel="stylesheet" href="./public/css/style.css">
+  <link rel="stylesheet" href="./public/css/mobile.css">
 </head>
 <body>
 
@@ -27,11 +27,11 @@
       <p class="survey-subtitle">探索从教学实验痛点到智能工具生成的落地实践</p>
     </header>
 
-    <!-- 顶部进度条 -->
+    <!-- 顶部进度条 (共 5 步) -->
     <div class="progress-container">
       <div class="progress-header">
         <span>填写进度</span>
-        <span class="progress-step-text" id="progressStepText">步骤 1 / 6</span>
+        <span class="progress-step-text" id="progressStepText">步骤 1 / 5</span>
       </div>
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progressFill"></div>
@@ -72,12 +72,6 @@
       <div class="form-item">
         <label class="form-label">所在学校全称 <span class="required-star">*</span></label>
         <input type="text" id="input-school" class="form-input" placeholder="例如：上海市崇明中学">
-        <div class="quick-tags">
-          <span class="quick-tag-chip" data-target="input-school" data-value="上海市崇明中学">上海市崇明中学</span>
-          <span class="quick-tag-chip" data-target="input-school" data-value="上海市扬子中学">上海市扬子中学</span>
-          <span class="quick-tag-chip" data-target="input-school" data-value="崇明区堡镇中学">崇明区堡镇中学</span>
-          <span class="quick-tag-chip" data-target="input-school" data-value="东滩学校">东滩学校</span>
-        </div>
       </div>
 
       <div class="form-item">
@@ -93,16 +87,6 @@
           <span class="quick-tag-chip" data-target="input-subject" data-value="科学">科学</span>
           <span class="quick-tag-chip" data-target="input-subject" data-value="信息科技">信息科技</span>
           <span class="quick-tag-chip" data-target="input-subject" data-value="化学/生物">化学/生物</span>
-        </div>
-      </div>
-
-      <div class="form-item">
-        <label class="form-label">任教学段（可多选）</label>
-        <div class="chip-group compact">
-          <div class="select-chip" data-group="basicInfo.schoolStages" data-value="初中" data-multi="true">初中</div>
-          <div class="select-chip" data-group="basicInfo.schoolStages" data-value="高中" data-multi="true">高中</div>
-          <div class="select-chip" data-group="basicInfo.schoolStages" data-value="完中/跨段" data-multi="true">完中/跨段</div>
-          <div class="select-chip" data-group="basicInfo.schoolStages" data-value="小学" data-multi="true">小学</div>
         </div>
       </div>
 
@@ -124,14 +108,29 @@
         <input type="number" id="input-teachingYears" class="form-input" placeholder="输入教龄数字，如：12" min="0" max="50">
       </div>
 
+      <!-- 专业/教研角色 -->
       <div class="form-item">
-        <label class="form-label">当前角色（可多选）</label>
+        <label class="form-label">专业 / 教研角色（可多选）</label>
         <div class="chip-group">
           <div class="select-chip" data-group="basicInfo.roles" data-value="普通教师" data-multi="true">普通教师</div>
           <div class="select-chip" data-group="basicInfo.roles" data-value="备课组长" data-multi="true">备课组长</div>
           <div class="select-chip" data-group="basicInfo.roles" data-value="教研组长" data-multi="true">教研组长</div>
-          <div class="select-chip" data-group="basicInfo.roles" data-value="骨干名师" data-multi="true">骨干名师</div>
-          <div class="select-chip" data-group="basicInfo.roles" data-value="教研员" data-multi="true">教研员</div>
+          <div class="select-chip" data-group="basicInfo.roles" data-value="年级组长" data-multi="true">年级组长</div>
+          <div class="select-chip" data-group="basicInfo.roles" data-value="区/市教研员" data-multi="true">区/市教研员</div>
+          <div class="select-chip" data-group="basicInfo.roles" data-value="名师工作室成员" data-multi="true">工作室成员</div>
+          <div class="select-chip" data-group="basicInfo.roles" data-value="其他业务角色" data-multi="true">其他</div>
+        </div>
+      </div>
+
+      <!-- 行政/管理职务 (选填) -->
+      <div class="form-item">
+        <label class="form-label">行政 / 管理职务（选填）</label>
+        <div class="chip-group">
+          <div class="select-chip" data-group="basicInfo.adminDuty" data-value="无行政职务">无行政职务</div>
+          <div class="select-chip" data-group="basicInfo.adminDuty" data-value="班主任">班主任</div>
+          <div class="select-chip" data-group="basicInfo.adminDuty" data-value="中层干部(教导/科研/德育等)">中层干部</div>
+          <div class="select-chip" data-group="basicInfo.adminDuty" data-value="校级领导">校级领导</div>
+          <div class="select-chip" data-group="basicInfo.adminDuty" data-value="其他管理职务">其他</div>
         </div>
       </div>
     </div>
@@ -153,7 +152,7 @@
           <div class="select-chip" data-group="aiUsage.tools.domesticGeneral" data-value="智谱清言" data-multi="true">智谱清言</div>
           <div class="select-chip" data-group="aiUsage.tools.domesticGeneral" data-value="通义千问" data-multi="true">通义千问</div>
           <div class="select-chip" data-group="aiUsage.tools.domesticGeneral" data-value="文心一言" data-multi="true">文心一言</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticGeneral" data-value="其他国内AI" data-multi="true">其他国内AI</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticGeneral" data-value="其他" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -166,7 +165,7 @@
           <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="Kimi Coder" data-multi="true">Kimi Coder</div>
           <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="文心快码(Comate)" data-multi="true">文心快码</div>
           <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="iFlyCode" data-multi="true">iFlyCode</div>
-          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="其他编程AI" data-multi="true">其他编程AI</div>
+          <div class="select-chip" data-group="aiUsage.tools.domesticCoding" data-value="其他" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -178,7 +177,7 @@
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Cursor" data-multi="true">Cursor</div>
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="Claude Code" data-multi="true">Claude Code</div>
           <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="AntiGravity" data-multi="true">AntiGravity</div>
-          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="其他国际工具" data-multi="true">其他国际工具</div>
+          <div class="select-chip" data-group="aiUsage.tools.foreignTools" data-value="其他" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -204,76 +203,76 @@
       </div>
     </div>
 
-    <!-- Step 3: AI 应用能力画像 (5级量表) -->
+    <!-- Step 3: 教师 AI 应用能力画像 (基于权威学术标准 5 级量表) -->
     <div class="step-card" id="step-3">
       <div class="step-title-row">
         <div class="step-number">3</div>
         <div class="step-title-text">教师 AI 应用能力画像 (5级评分)</div>
       </div>
-      <p class="form-tip" style="margin-bottom: 14px;">1=从未接触 | 2=需人指导 | 3=模板辅助完成 | 4=独立熟练 | 5=可设计并指导他人</p>
+      <p class="form-tip" style="margin-bottom: 14px;">1=从未涉足 | 2=初步感知 | 3=辅助应用 | 4=熟练胜任 | 5=创新引领</p>
 
-      <!-- 维度1: 教学内容生成 -->
+      <!-- 维度1: 教学设计与内容生成 -->
       <div class="scale-rating-item">
-        <div class="scale-rating-title">1. 教学内容与设计生成</div>
-        <div class="scale-rating-desc">使用 AI 编写教案、重构教学设计、生成练习命题与量规</div>
+        <div class="scale-rating-title">1. AI 教学设计与内容生成 <span class="required-star">*</span></div>
+        <div class="scale-rating-desc">运用生成式 AI 优化物理教学设计、重构分层导学案、生成情境化试题与评价量规</div>
         <div class="scale-buttons-row">
-          <div class="scale-btn" data-dim="contentGeneration" data-score="1"><span class="scale-num">1</span><span class="scale-text">未接触</span></div>
-          <div class="scale-btn" data-dim="contentGeneration" data-score="2"><span class="scale-num">2</span><span class="scale-text">需指导</span></div>
-          <div class="scale-btn selected" data-dim="contentGeneration" data-score="3"><span class="scale-num">3</span><span class="scale-text">模板辅助</span></div>
-          <div class="scale-btn" data-dim="contentGeneration" data-score="4"><span class="scale-num">4</span><span class="scale-text">独立熟练</span></div>
-          <div class="scale-btn" data-dim="contentGeneration" data-score="5"><span class="scale-num">5</span><span class="scale-text">精通指导</span></div>
+          <div class="scale-btn" data-dim="contentGeneration" data-score="1"><span class="scale-num">1</span><span class="scale-text">未涉足</span></div>
+          <div class="scale-btn" data-dim="contentGeneration" data-score="2"><span class="scale-num">2</span><span class="scale-text">初感知</span></div>
+          <div class="scale-btn" data-dim="contentGeneration" data-score="3"><span class="scale-num">3</span><span class="scale-text">能辅助</span></div>
+          <div class="scale-btn" data-dim="contentGeneration" data-score="4"><span class="scale-num">4</span><span class="scale-text">熟胜任</span></div>
+          <div class="scale-btn" data-dim="contentGeneration" data-score="5"><span class="scale-num">5</span><span class="scale-text">创引领</span></div>
         </div>
       </div>
 
-      <!-- 维度2: 多媒体与课件 -->
+      <!-- 维度2: 多媒体与动态情境呈现 -->
       <div class="scale-rating-item">
-        <div class="scale-rating-title">2. 多媒体与课件生成</div>
-        <div class="scale-rating-desc">AI 制作 PPT、物理情境图、教学动画、交互演示网页</div>
+        <div class="scale-rating-title">2. AI 多媒体与动态情境呈现 <span class="required-star">*</span></div>
+        <div class="scale-rating-desc">运用 AI 智能生成教学 PPT、物理微情境图、动态演示动画或交互探究微网页</div>
         <div class="scale-buttons-row">
-          <div class="scale-btn" data-dim="multimedia" data-score="1"><span class="scale-num">1</span><span class="scale-text">未接触</span></div>
-          <div class="scale-btn" data-dim="multimedia" data-score="2"><span class="scale-num">2</span><span class="scale-text">需指导</span></div>
-          <div class="scale-btn selected" data-dim="multimedia" data-score="3"><span class="scale-num">3</span><span class="scale-text">模板辅助</span></div>
-          <div class="scale-btn" data-dim="multimedia" data-score="4"><span class="scale-num">4</span><span class="scale-text">独立熟练</span></div>
-          <div class="scale-btn" data-dim="multimedia" data-score="5"><span class="scale-num">5</span><span class="scale-text">精通指导</span></div>
+          <div class="scale-btn" data-dim="multimedia" data-score="1"><span class="scale-num">1</span><span class="scale-text">未涉足</span></div>
+          <div class="scale-btn" data-dim="multimedia" data-score="2"><span class="scale-num">2</span><span class="scale-text">初感知</span></div>
+          <div class="scale-btn" data-dim="multimedia" data-score="3"><span class="scale-num">3</span><span class="scale-text">能辅助</span></div>
+          <div class="scale-btn" data-dim="multimedia" data-score="4"><span class="scale-num">4</span><span class="scale-text">熟胜任</span></div>
+          <div class="scale-btn" data-dim="multimedia" data-score="5"><span class="scale-num">5</span><span class="scale-text">创引领</span></div>
         </div>
       </div>
 
-      <!-- 维度3: 数据处理与学情分析 -->
+      <!-- 维度3: 学情诊断与实验数据分析 -->
       <div class="scale-rating-item">
-        <div class="scale-rating-title">3. 学情诊断与数据分析</div>
-        <div class="scale-rating-desc">AI 分析成绩、制作统计图表、处理学生实验数据及误差拟合</div>
+        <div class="scale-rating-title">3. AI 学情诊断与实验数据分析 <span class="required-star">*</span></div>
+        <div class="scale-rating-desc">运用 AI 进行学生学情诊断、物理测定数据清洗、误差统计分析及实验曲线拟合</div>
         <div class="scale-buttons-row">
-          <div class="scale-btn" data-dim="dataAnalysis" data-score="1"><span class="scale-num">1</span><span class="scale-text">未接触</span></div>
-          <div class="scale-btn" data-dim="dataAnalysis" data-score="2"><span class="scale-num">2</span><span class="scale-text">需指导</span></div>
-          <div class="scale-btn selected" data-dim="dataAnalysis" data-score="3"><span class="scale-num">3</span><span class="scale-text">模板辅助</span></div>
-          <div class="scale-btn" data-dim="dataAnalysis" data-score="4"><span class="scale-num">4</span><span class="scale-text">独立熟练</span></div>
-          <div class="scale-btn" data-dim="dataAnalysis" data-score="5"><span class="scale-num">5</span><span class="scale-text">精通指导</span></div>
+          <div class="scale-btn" data-dim="dataAnalysis" data-score="1"><span class="scale-num">1</span><span class="scale-text">未涉足</span></div>
+          <div class="scale-btn" data-dim="dataAnalysis" data-score="2"><span class="scale-num">2</span><span class="scale-text">初感知</span></div>
+          <div class="scale-btn" data-dim="dataAnalysis" data-score="3"><span class="scale-num">3</span><span class="scale-text">能辅助</span></div>
+          <div class="scale-btn" data-dim="dataAnalysis" data-score="4"><span class="scale-num">4</span><span class="scale-text">熟胜任</span></div>
+          <div class="scale-btn" data-dim="dataAnalysis" data-score="5"><span class="scale-num">5</span><span class="scale-text">创引领</span></div>
         </div>
       </div>
 
-      <!-- 维度4: 编程与原型开发 -->
+      <!-- 维度4: 协作编程与教学工具开发 -->
       <div class="scale-rating-item">
-        <div class="scale-rating-title">4. 编程与原型协作开发</div>
-        <div class="scale-rating-desc">使用 AI 编写 HTML 交互页、Python/JS 脚本、从需求完成小工具</div>
+        <div class="scale-rating-title">4. AI 协作编程与教学工具开发 <span class="required-star">*</span></div>
+        <div class="scale-rating-desc">通过自然语言 Prompt 指挥 AI 编写 Python/JS/HTML 脚本，从需求构建物理交互工具</div>
         <div class="scale-buttons-row">
-          <div class="scale-btn" data-dim="programming" data-score="1"><span class="scale-num">1</span><span class="scale-text">未接触</span></div>
-          <div class="scale-btn selected" data-dim="programming" data-score="2"><span class="scale-num">2</span><span class="scale-text">需指导</span></div>
-          <div class="scale-btn" data-dim="programming" data-score="3"><span class="scale-num">3</span><span class="scale-text">模板辅助</span></div>
-          <div class="scale-btn" data-dim="programming" data-score="4"><span class="scale-num">4</span><span class="scale-text">独立熟练</span></div>
-          <div class="scale-btn" data-dim="programming" data-score="5"><span class="scale-num">5</span><span class="scale-text">精通指导</span></div>
+          <div class="scale-btn" data-dim="programming" data-score="1"><span class="scale-num">1</span><span class="scale-text">未涉足</span></div>
+          <div class="scale-btn" data-dim="programming" data-score="2"><span class="scale-num">2</span><span class="scale-text">初感知</span></div>
+          <div class="scale-btn" data-dim="programming" data-score="3"><span class="scale-num">3</span><span class="scale-text">能辅助</span></div>
+          <div class="scale-btn" data-dim="programming" data-score="4"><span class="scale-num">4</span><span class="scale-text">熟胜任</span></div>
+          <div class="scale-btn" data-dim="programming" data-score="5"><span class="scale-num">5</span><span class="scale-text">创引领</span></div>
         </div>
       </div>
 
-      <!-- 维度5: 物理实验创新开发 -->
+      <!-- 维度5: 物理实验与智能传感创新 -->
       <div class="scale-rating-item">
-        <div class="scale-rating-title">5. 物理实验数字化创新</div>
-        <div class="scale-rating-desc">摄像头图像采集、视觉识别轨迹、仪表 OCR、传感器可视化</div>
+        <div class="scale-rating-title">5. AI 赋能物理实验与传感创新 <span class="required-star">*</span></div>
+        <div class="scale-rating-desc">利用 AI 开展摄像头运动追踪、视觉现象识别、仪表 OCR 读数与传感器实时可视化</div>
         <div class="scale-buttons-row">
-          <div class="scale-btn" data-dim="experimentDev" data-score="1"><span class="scale-num">1</span><span class="scale-text">未接触</span></div>
-          <div class="scale-btn selected" data-dim="experimentDev" data-score="2"><span class="scale-num">2</span><span class="scale-text">需指导</span></div>
-          <div class="scale-btn" data-dim="experimentDev" data-score="3"><span class="scale-num">3</span><span class="scale-text">模板辅助</span></div>
-          <div class="scale-btn" data-dim="experimentDev" data-score="4"><span class="scale-num">4</span><span class="scale-text">独立熟练</span></div>
-          <div class="scale-btn" data-dim="experimentDev" data-score="5"><span class="scale-num">5</span><span class="scale-text">精通指导</span></div>
+          <div class="scale-btn" data-dim="experimentDev" data-score="1"><span class="scale-num">1</span><span class="scale-text">未涉足</span></div>
+          <div class="scale-btn" data-dim="experimentDev" data-score="2"><span class="scale-num">2</span><span class="scale-text">初感知</span></div>
+          <div class="scale-btn" data-dim="experimentDev" data-score="3"><span class="scale-num">3</span><span class="scale-text">能辅助</span></div>
+          <div class="scale-btn" data-dim="experimentDev" data-score="4"><span class="scale-num">4</span><span class="scale-text">熟胜任</span></div>
+          <div class="scale-btn" data-dim="experimentDev" data-score="5"><span class="scale-num">5</span><span class="scale-text">创引领</span></div>
         </div>
       </div>
     </div>
@@ -294,6 +293,7 @@
           <div class="select-chip" data-group="needs.workNeeds" data-value="实验教学工具开发" data-multi="true">实验工具开发</div>
           <div class="select-chip" data-group="needs.workNeeds" data-value="论文教科研" data-multi="true">论文教科研</div>
           <div class="select-chip" data-group="needs.workNeeds" data-value="学生个性化辅导" data-multi="true">个别辅导</div>
+          <div class="select-chip" data-group="needs.workNeeds" data-value="其他常规需求" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -306,6 +306,7 @@
           <div class="select-chip" data-group="needs.experimentNeeds" data-value="物理场可视化" data-multi="true">物理场可视化</div>
           <div class="select-chip" data-group="needs.experimentNeeds" data-value="实验现象模拟与交互" data-multi="true">现象模拟交互</div>
           <div class="select-chip" data-group="needs.experimentNeeds" data-value="传统仪器数字化" data-multi="true">传统仪器数字化</div>
+          <div class="select-chip" data-group="needs.experimentNeeds" data-value="其他实验方向" data-multi="true">其他</div>
         </div>
       </div>
 
@@ -315,11 +316,11 @@
       </div>
     </div>
 
-    <!-- Step 5: 教师创新项目现状 -->
+    <!-- Step 5: 创新项目现状与现场期望 (合并精简) -->
     <div class="step-card" id="step-5">
       <div class="step-title-row">
         <div class="step-number">5</div>
-        <div class="step-title-text">教师创新项目现状</div>
+        <div class="step-title-text">创新项目现状与现场期望</div>
       </div>
 
       <div class="form-item">
@@ -334,42 +335,30 @@
       </div>
 
       <div class="form-item">
-        <label class="form-label">项目名称（如有）</label>
-        <input type="text" id="input-projectName" class="form-input" placeholder="输入您的项目名称（选填）">
+        <label class="form-label">项目名称（选填）</label>
+        <input type="text" id="input-projectName" class="form-input" placeholder="输入您的创新项目名称（如有）">
       </div>
 
       <div class="form-item">
-        <label class="form-label">创新项目当前最大困难（可多选）</label>
+        <label class="form-label">创新项目当前主要困难（可多选）</label>
         <div class="chip-group">
           <div class="select-chip" data-group="project.difficulties" data-value="不会编写代码" data-multi="true">不会编写代码</div>
           <div class="select-chip" data-group="project.difficulties" data-value="AI生成的代码调试不通" data-multi="true">代码调试不通</div>
           <div class="select-chip" data-group="project.difficulties" data-value="不会接入摄像头/传感器" data-multi="true">硬件/摄像头接入</div>
           <div class="select-chip" data-group="project.difficulties" data-value="缺乏时间和精力" data-multi="true">缺乏时间精力</div>
           <div class="select-chip" data-group="project.difficulties" data-value="不知道如何转化成课题论文" data-multi="true">课题论文转化</div>
+          <div class="select-chip" data-group="project.difficulties" data-value="其他困难" data-multi="true">其他</div>
         </div>
       </div>
-    </div>
 
-    <!-- Step 6: 开放性期望与提交 -->
-    <div class="step-card" id="step-6">
-      <div class="step-title-row">
-        <div class="step-number">6</div>
-        <div class="step-title-text">开放期望与现场交流</div>
+      <div class="form-item">
+        <label class="form-label">最希望开发的物理实验工具或教学痛点（选填）</label>
+        <textarea id="input-dreamTool" class="form-textarea" placeholder="例如：希望用手机摄像头直接识别各种电表读数或自动拟合单摆周期曲线..."></textarea>
       </div>
 
       <div class="form-item">
-        <label class="form-label">1. 若技术门槛不存在，你最希望开发怎样的物理教学/实验工具？</label>
-        <textarea id="input-dreamTool" class="form-textarea" placeholder="例如：一个能直接用手机摄像头实时分析单摆能量转化的交互微工具..."></textarea>
-      </div>
-
-      <div class="form-item">
-        <label class="form-label">2. 物理教学中，最想解决但一直缺乏有效方案的问题？</label>
-        <textarea id="input-teachingPainPoint" class="form-textarea" placeholder="例如：学生无法直观感受磁感应线和瞬时感应电流的变化过程..."></textarea>
-      </div>
-
-      <div class="form-item">
-        <label class="form-label">3. 你希望本次崇明研训讲座重点演示或实操哪些内容？（现场实时调优参考）</label>
-        <textarea id="input-lectureExpectation" class="form-textarea" placeholder="例如：希望能手把手演示如何用AI写出一个带摄像头识别的物理小工具..."></textarea>
+        <label class="form-label">你希望本次讲座重点演示或实操哪些内容？（现场实时调优参考）</label>
+        <textarea id="input-lectureExpectation" class="form-textarea" placeholder="例如：希望能手把手演练如何用AI写出一个带摄像头识别的物理小工具..."></textarea>
       </div>
     </div>
 
@@ -405,11 +394,13 @@
         </div>
       </div>
 
-      <a href="/dashboard" class="btn btn-secondary" style="width: 100%;">查看讲师大屏实时画像</a>
+      <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 20px; padding: 12px; background: rgba(0, 242, 254, 0.05); border-radius: 8px; border: 1px solid rgba(0, 242, 254, 0.15);">
+        ✨ 您的问卷已成功提交，请关注主讲人现场大屏演练
+      </div>
     </div>
 
   </div>
 
-  <script src="/public/js/survey.js"></script>
+  <script src="./public/js/survey.js"></script>
 </body>
 </html>
