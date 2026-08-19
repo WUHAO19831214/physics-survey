@@ -1,1 +1,130 @@
-[]
+[
+  {
+    "sessionId": "2026-chongming-ai-physics",
+    "basicInfo": {
+      "name": "44",
+      "gender": "女",
+      "province": "上海市",
+      "district": "崇明区",
+      "school": "上海市实验学校东滩高级中学",
+      "schoolAddress": "上海市崇明区陈家镇雪雁路300号",
+      "subject": "物理",
+      "grades": [
+        "高二"
+      ],
+      "teachingYears": 4,
+      "roles": [
+        "名师工作室成员"
+      ],
+      "adminDuty": "中层干部(教导/科研/德育等)"
+    },
+    "aiUsage": {
+      "tools": {
+        "domesticGeneral": [
+          "Kimi"
+        ],
+        "domesticCoding": [
+          "字节 Trae"
+        ],
+        "foreignTools": [
+          "Claude"
+        ]
+      },
+      "experience": "3个月内",
+      "frequency": "每周1-2次"
+    },
+    "aiCapability": {
+      "contentGeneration": 5,
+      "multimedia": 5,
+      "dataAnalysis": 5,
+      "programming": 5,
+      "experimentDev": 5
+    },
+    "needs": {
+      "workNeeds": [
+        "学生个性化辅导"
+      ],
+      "experimentNeeds": [
+        "传统仪器数字化"
+      ],
+      "experimentPainDetail": ""
+    },
+    "project": {
+      "stage": "已经尝试",
+      "name": "",
+      "categories": [],
+      "difficulties": [
+        "缺乏时间和精力"
+      ]
+    },
+    "openResponses": {
+      "dreamTool": "",
+      "teachingPainPoint": "",
+      "lectureExpectation": ""
+    },
+    "submittedAt": "2026-08-19T04:51:52.806Z",
+    "id": "rec_1787115112806_oxjich"
+  },
+  {
+    "sessionId": "2026-chongming-ai-physics",
+    "basicInfo": {
+      "name": "张老师",
+      "gender": "女",
+      "province": "上海市",
+      "district": "崇明区",
+      "school": "上海市崇明区民本中学",
+      "schoolAddress": "上海市崇明区堡镇向阳路219号",
+      "subject": "物理",
+      "grades": [
+        "八年级"
+      ],
+      "teachingYears": 7,
+      "roles": [
+        "备课组长",
+        "年级组长",
+        "名师工作室成员"
+      ],
+      "adminDuty": "校级领导"
+    },
+    "aiUsage": {
+      "tools": {
+        "domesticGeneral": [
+          "Kimi"
+        ],
+        "domesticCoding": [
+          "字节 Trae"
+        ],
+        "foreignTools": []
+      },
+      "experience": "3个月内",
+      "frequency": "每周1-2次"
+    },
+    "aiCapability": {
+      "contentGeneration": 5,
+      "multimedia": 5,
+      "dataAnalysis": 5,
+      "programming": 5,
+      "experimentDev": 5
+    },
+    "needs": {
+      "workNeeds": [],
+      "experimentNeeds": [],
+      "experimentPainDetail": ""
+    },
+    "project": {
+      "stage": "暂无想法",
+      "name": "",
+      "categories": [],
+      "difficulties": [
+        "AI生成的代码调试不通"
+      ]
+    },
+    "openResponses": {
+      "dreamTool": "",
+      "teachingPainPoint": "",
+      "lectureExpectation": ""
+    },
+    "submittedAt": "2026-08-19T04:55:21.241Z",
+    "id": "rec_1787115321241_kfn7z2"
+  }
+]

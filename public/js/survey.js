@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * 初始化 Chip 选择交互
+   * 初始化 Chip 选择交互 (包含“其他”自定义输入动态联动)
    */
   function initChipSelection() {
     document.querySelectorAll('.select-chip').forEach(chip => {
@@ -183,21 +183,75 @@ document.addEventListener('DOMContentLoaded', () => {
         const group = chip.dataset.group;
         const val = chip.dataset.value;
         const isMulti = chip.dataset.multi === 'true';
+        const otherTargetId = chip.dataset.otherTarget;
 
         if (isMulti) {
           chip.classList.toggle('active');
           const targetArray = getNestedArray(group);
-          if (chip.classList.contains('active')) {
-            if (!targetArray.includes(val)) targetArray.push(val);
+          const isNowActive = chip.classList.contains('active');
+
+          if (isNowActive) {
+            // 如果点击的是“其他”
+            if (otherTargetId) {
+              const otherWrap = document.getElementById(otherTargetId);
+              if (otherWrap) {
+                otherWrap.style.display = 'block';
+                const input = otherWrap.querySelector('input');
+                if (input) {
+                  input.focus();
+                  const customVal = input.value.trim();
+                  const finalVal = customVal ? `其他: ${customVal}` : '其他';
+                  if (!targetArray.some(item => item === '其他' || item.startsWith('其他:'))) {
+                    targetArray.push(finalVal);
+                  }
+                }
+              }
+            } else {
+              if (!targetArray.includes(val)) targetArray.push(val);
+            }
           } else {
-            const idx = targetArray.indexOf(val);
-            if (idx > -1) targetArray.splice(idx, 1);
+            // 取消选中
+            if (otherTargetId) {
+              const otherWrap = document.getElementById(otherTargetId);
+              if (otherWrap) {
+                otherWrap.style.display = 'none';
+                const input = otherWrap.querySelector('input');
+                if (input) input.value = '';
+              }
+              // 移除所有以“其他”开头的项
+              for (let i = targetArray.length - 1; i >= 0; i--) {
+                if (targetArray[i] === '其他' || targetArray[i].startsWith('其他:')) {
+                  targetArray.splice(i, 1);
+                }
+              }
+            } else {
+              const idx = targetArray.indexOf(val);
+              if (idx > -1) targetArray.splice(idx, 1);
+            }
           }
         } else {
           // 单选
           document.querySelectorAll(`.select-chip[data-group="${group}"]`).forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
           setNestedValue(group, val);
+        }
+        saveDraft();
+      });
+    });
+
+    // 绑定“其他”自定义文本输入监听
+    document.querySelectorAll('.other-custom-input').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const group = input.dataset.group;
+        const targetArray = getNestedArray(group);
+        const text = e.target.value.trim();
+        const finalVal = text ? `其他: ${text}` : '其他';
+
+        const otherIdx = targetArray.findIndex(item => item === '其他' || item.startsWith('其他:'));
+        if (otherIdx > -1) {
+          targetArray[otherIdx] = finalVal;
+        } else {
+          targetArray.push(finalVal);
         }
         saveDraft();
       });
@@ -307,9 +361,26 @@ document.addEventListener('DOMContentLoaded', () => {
           const group = chip.dataset.group;
           const val = chip.dataset.value;
           const isMulti = chip.dataset.multi === 'true';
+          const otherTargetId = chip.dataset.otherTarget;
+
           if (isMulti) {
             const arr = getNestedArray(group);
-            if (arr && arr.includes(val)) chip.classList.add('active');
+            if (otherTargetId && arr) {
+              const matchedOther = arr.find(item => item === '其他' || item.startsWith('其他:'));
+              if (matchedOther) {
+                chip.classList.add('active');
+                const otherWrap = document.getElementById(otherTargetId);
+                if (otherWrap) {
+                  otherWrap.style.display = 'block';
+                  const input = otherWrap.querySelector('input');
+                  if (input && matchedOther.startsWith('其他:')) {
+                    input.value = matchedOther.replace('其他:', '').trim();
+                  }
+                }
+              }
+            } else if (arr && arr.includes(val)) {
+              chip.classList.add('active');
+            }
           } else {
             const currentVal = getNestedArray(group);
             if (currentVal === val) chip.classList.add('active');

@@ -224,6 +224,46 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.chip-group.three-col {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.chip-group.three-col .select-chip {
+  min-height: 48px;
+  padding: 8px 6px;
+  font-size: 0.85rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 480px) {
+  .chip-group.three-col {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .chip-group.three-col .select-chip {
+    padding: 8px 4px;
+    font-size: 0.78rem;
+    min-height: 44px;
+  }
+}
+
+.other-input-wrap {
+  position: relative;
+  animation: fadeInDown 0.22s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .select-chip {
   position: relative;
   display: flex;
