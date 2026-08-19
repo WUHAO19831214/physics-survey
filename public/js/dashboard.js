@@ -852,11 +852,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // 复制按钮
+    document.getElementById('btnCopyGithub')?.addEventListener('click', () => {
+      const input = document.getElementById('githubSurveyUrl');
+      if (input && input.value) {
+        navigator.clipboard.writeText(input.value);
+        showToast('GitHub Pages 永久问卷链接已复制到剪贴板！');
+      }
+    });
+
     document.getElementById('btnCopyPublic')?.addEventListener('click', () => {
       const input = document.getElementById('publicSurveyUrl');
       if (input && input.value) {
         navigator.clipboard.writeText(input.value);
-        showToast('外网问卷链接已复制到剪贴板！');
+        showToast('实时穿透链接已复制到剪贴板！');
       }
     });
 
@@ -864,7 +872,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const input = document.getElementById('localSurveyUrl');
       if (input && input.value) {
         navigator.clipboard.writeText(input.value);
-        showToast('局域网问卷链接已复制到剪贴板！');
+        showToast('局域网内网链接已复制到剪贴板！');
       }
     });
 
