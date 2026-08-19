@@ -334,6 +334,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
+   * 智能获取提交接口地址 (支持 Localhost、局域网、Cloudflare 穿透及 GitHub Pages 跨域回传)
+   */
+  function getSubmitEndpoint() {
+    // 1. 本地调试或局域网访问
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.')) {
+      return '/api/submit';
+    }
+    
+    // 2. 当前正处于穿透域名下访问
+    if (window.location.hostname.includes('trycloudflare.com') || window.location.hostname.includes('loca.lt')) {
+      return '/api/submit';
+    }
+
+    // 3. 在 GitHub Pages (wuhao19831214.github.io) 访问，自动跨域提交至当前活跃穿透隧道
+    return 'https://helpful-either-isolation-julie.trycloudflare.com/api/submit';
+  }
+
+  /**
    * 提交表单至后端服务
    */
   async function submitForm() {
@@ -344,15 +362,22 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.submittedAt = new Date().toISOString();
     formData.id = `rec_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
 
-    // 优先提交到后端 API
+    const endpoint = getSubmitEndpoint();
+
+    // 优先提交到后端 API (支持跨域 CORS 回传)
+    let submittedToServer = false;
     try {
-      await fetch('/api/submit', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
+      if (response.ok) {
+        submittedToServer = true;
+        console.log('✅ 数据已实时同步回传至主讲人终端。');
+      }
     } catch (e) {
-      console.warn('本地服务连接失败，已转存至离线 LocalStorage。', e);
+      console.warn('公网直连回传失败，已自动转存至离线缓存。', e);
     }
 
     // 本地持久化备份
