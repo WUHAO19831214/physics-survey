@@ -61,6 +61,14 @@ function processOutput(data) {
 
     fs.writeFileSync(TUNNEL_FILE, JSON.stringify(info, null, 2), 'utf-8');
 
+    // 自动推送最新隧道地址至 GitHub 仓库
+    const { exec } = require('child_process');
+    exec('git add data/tunnel.json && git commit -m "chore: auto sync active tunnel endpoint" && git push origin main', { cwd: __dirname }, (err) => {
+      if (!err) {
+        console.log('  ☁️ 已自动同步最新穿透地址至 GitHub Pages！');
+      }
+    });
+
     console.log('\n================================================================');
     console.log('  🎉 教师问卷外网穿透链接已就绪 (可供全场手机直接扫码填报)！');
     console.log(`  🌐 教师手机外网直连链接:   ${tunnelUrl}/`);

@@ -400,10 +400,26 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
+  let activeTunnelUrl = 'https://suddenly-roulette-isaac-manually.trycloudflare.com';
+
+  // 页面加载时自动从 ./data/tunnel.json 读取最新的活跃穿透地址
+  async function loadActiveTunnelConfig() {
+    try {
+      const res = await fetch('./data/tunnel.json?_t=' + Date.now());
+      if (res.ok) {
+        const info = await res.json();
+        if (info.tunnelUrl) {
+          activeTunnelUrl = info.tunnelUrl;
+        }
+      }
+    } catch (e) {}
+  }
+  loadActiveTunnelConfig();
+
   /**
    * 智能获取提交接口地址 (支持 Localhost、局域网、Cloudflare 穿透及 GitHub Pages 跨域回传)
    */
-  function getSubmitEndpoint() {
+  async function getSubmitEndpoint() {
     // 1. 本地调试或局域网访问
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.')) {
       return '/api/submit';
@@ -414,8 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return '/api/submit';
     }
 
-    // 3. 在 GitHub Pages (wuhao19831214.github.io) 访问，自动跨域提交至当前活跃穿透隧道
-    return 'https://helpful-either-isolation-julie.trycloudflare.com/api/submit';
+    // 3. 在 GitHub Pages (wuhao19831214.github.io) 访问，自动读取最新穿透地址
+    if (!activeTunnelUrl) {
+      await loadActiveTunnelConfig();
+    }
+    const baseUrl = activeTunnelUrl || 'https://suddenly-roulette-isaac-manually.trycloudflare.com';
+    return `${baseUrl}/api/submit`;
   }
 
   /**
@@ -429,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.submittedAt = new Date().toISOString();
     formData.id = `rec_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
 
-    const endpoint = getSubmitEndpoint();
+    const endpoint = await getSubmitEndpoint();
 
     // 优先提交到后端 API (支持跨域 CORS 回传)
     let submittedToServer = false;

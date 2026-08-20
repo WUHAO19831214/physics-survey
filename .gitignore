@@ -5,7 +5,6 @@ npm-debug.log*
 # Binaries
 bin/
 
-# Temporary data
-data/tunnel.json
+# Temp
 .DS_Store
 *.log
