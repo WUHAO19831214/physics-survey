@@ -841,11 +841,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   /**
    * 智能讲座建议与实时消息流自动生成
    */
-  async function updateAiAdvice(records, capabilitySummary) {
-    const result = await AiAnalyser.runAnalysis(records, capabilitySummary);
-    document.getElementById('aiStatusLabel').innerText = result.source;
+  async function updateAiAdvice(records, capabilitySummary, showModal = false) {
+    const result = await AiAnalyser.runAnalysis(records, capabilitySummary, currentAiEngine);
+    
+    // 更新状态指示
+    const statusLabel = document.getElementById('aiStatusLabel');
+    if (statusLabel) {
+      statusLabel.innerText = result.source;
+      statusLabel.style.color = result.isOllama ? '#2ed573' : '#00f2fe';
+    }
 
-    // 渲染关键词发光云
+    // 渲染关键词发光云 (错落字号与发光色调)
     const wordCloudBox = document.getElementById('aiWordCloud');
     if (result.keywords && result.keywords.length > 0) {
       wordCloudBox.innerHTML = '';
@@ -854,44 +860,125 @@ document.addEventListener('DOMContentLoaded', async () => {
         const levelClass = idx < 2 ? 'level-1' : (idx < 5 ? 'level-2' : 'level-3');
         span.className = `ai-cloud-word ${levelClass}`;
         span.innerText = `${k.word} (${k.freq})`;
+        span.title = `热度频次: ${k.freq} 次`;
+        span.style.cursor = 'pointer';
+        span.addEventListener('click', () => runAiDeepAnalysis(true));
         wordCloudBox.appendChild(span);
       });
     }
 
     // 渲染实时消息滚动流
     const streamBox = document.getElementById('aiStreamBox');
-    streamBox.innerHTML = '';
-    
-    if (records.length === 0) {
-      streamBox.innerHTML = `<div class="ai-stream-item"><span class="ai-stream-time">[系统]</span> 正在等待教师提交或载入模拟数据以开展深度语义提炼...</div>`;
-      return;
+    if (streamBox) {
+      streamBox.innerHTML = '';
+      if (records.length === 0) {
+        streamBox.innerHTML = `<div class="ai-stream-item"><span class="ai-stream-time">[系统]</span> 正在等待教师提交或载入模拟数据以开展深度语义提炼...</div>`;
+      } else {
+        records.slice(-4).reverse().forEach(r => {
+          const b = r.basicInfo || {};
+          const o = r.openResponses || {};
+          const n = r.needs || {};
+          const timeStr = r.submittedAt ? new Date(r.submittedAt).toLocaleTimeString() : '11:20:00';
+          const text = o.lectureExpectation || o.teachingPainPoint || n.experimentPainDetail || o.dreamTool || '探索AI在物理实验中的应用';
+
+          const div = document.createElement('div');
+          div.className = 'ai-stream-item';
+          div.innerHTML = `<span class="ai-stream-time">[${timeStr}]</span> <strong>${b.name || '教师'}</strong> (${b.school || '崇明中学'}): ${text}`;
+          streamBox.appendChild(div);
+        });
+      }
     }
 
-    // 提取最新教师的真实诉求
-    records.slice(-4).reverse().forEach(r => {
-      const b = r.basicInfo || {};
-      const o = r.openResponses || {};
-      const n = r.needs || {};
-      const timeStr = r.submittedAt ? new Date(r.submittedAt).toLocaleTimeString() : '11:20:00';
-      const text = o.lectureExpectation || o.teachingPainPoint || n.experimentPainDetail || o.dreamTool || '探索AI在物理实验中的应用';
+    // 如果需要弹窗展示完整策略报告
+    if (showModal) {
+      const modal = document.getElementById('aiAdviceModal');
+      const modalSource = document.getElementById('modalAiSource');
+      const modalCount = document.getElementById('modalAiRecordCount');
+      const modalContent = document.getElementById('modalAiContent');
 
-      const div = document.createElement('div');
-      div.className = 'ai-stream-item';
-      div.innerHTML = `<span class="ai-stream-time">[${timeStr}]</span> <strong>${b.name || '教师'}</strong> (${b.school || '中学'}): ${text}`;
-      streamBox.appendChild(div);
-    });
+      if (modal && modalContent) {
+        if (modalSource) modalSource.innerText = result.source;
+        if (modalCount) modalCount.innerText = `基于 ${records.length} 位参训教师真实需求数据`;
+
+        let html = '';
+        html += `<div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;">
+          <h4 style="color: var(--accent-cyan); margin-bottom: 6px; font-size: 1rem;">📊 教师群体特征与诉求洞察</h4>
+          <p style="margin: 0; color: #ffffff;">${result.summary || '已汇总全场教师填报数据并完成智能聚类。'}</p>
+        </div>`;
+
+        if (result.focusStrengthen && result.focusStrengthen.length > 0) {
+          html += `<div style="margin-bottom: 16px;">
+            <h4 style="color: #2ed573; margin-bottom: 8px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+              <span>🎯 建议本场讲座重点加强 / 实战演示</span>
+            </h4>
+            <ul style="padding-left: 20px; margin: 0;">`;
+          result.focusStrengthen.forEach(item => {
+            html += `<li style="margin-bottom: 6px;">${item}</li>`;
+          });
+          html += `</ul></div>`;
+        }
+
+        if (result.focusReduce && result.focusReduce.length > 0) {
+          html += `<div style="margin-bottom: 16px;">
+            <h4 style="color: #ffa502; margin-bottom: 8px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+              <span>⚡ 建议本场讲座适度降低 / 避免</span>
+            </h4>
+            <ul style="padding-left: 20px; margin: 0;">`;
+          result.focusReduce.forEach(item => {
+            html += `<li style="margin-bottom: 6px;">${item}</li>`;
+          });
+          html += `</ul></div>`;
+        }
+
+        if (result.keywords && result.keywords.length > 0) {
+          html += `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">🔥 现场高频热词：</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+          result.keywords.forEach(k => {
+            html += `<span style="background: rgba(0, 242, 254, 0.12); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">${k.word} (${k.freq})</span>`;
+          });
+          html += `</div></div>`;
+        }
+
+        modalContent.innerHTML = html;
+        modal.style.display = 'flex';
+      }
+    }
+
+    return result;
   }
 
   /**
    * 手动触发深度 AI 研判
    */
-  async function runAiDeepAnalysis() {
+  async function runAiDeepAnalysis(showModal = true) {
     const btn = document.getElementById('btnRunAi');
-    btn.innerText = 'AI 正在研判...';
-    const capabilitySummary = RadarCalculator.calculateCohortAverages(rawData);
-    await updateAiAdvice(rawData, capabilitySummary);
-    btn.innerText = '⚡ AI 分析核心需求';
-    showToast('AI 核心关注与现场讲座调优策略已更新！');
+    const prevText = btn.innerText;
+    btn.innerText = currentAiEngine === 'ollama' ? 'Ollama 正在运算...' : '规则引擎计算中...';
+    btn.disabled = true;
+
+    try {
+      const capabilitySummary = RadarCalculator.calculateCohortAverages(rawData);
+      await updateAiAdvice(rawData, capabilitySummary, showModal);
+      showToast(currentAiEngine === 'ollama' ? '本地 Ollama (gemma4:e4b) 深度研判完成！' : '轻量本地规则聚类分析已完成！');
+    } catch (e) {
+      showToast('AI 研判发生异常: ' + e.message, true);
+    } finally {
+      btn.innerText = prevText;
+      btn.disabled = false;
+    }
+  }
+
+  // 绑定 AI 建议弹窗关闭事件
+  const btnCloseAiAdvice = document.getElementById('btnCloseAiAdvice');
+  const aiAdviceModal = document.getElementById('aiAdviceModal');
+  if (btnCloseAiAdvice && aiAdviceModal) {
+    btnCloseAiAdvice.addEventListener('click', () => {
+      aiAdviceModal.style.display = 'none';
+    });
+    aiAdviceModal.addEventListener('click', (e) => {
+      if (e.target === aiAdviceModal) aiAdviceModal.style.display = 'none';
+    });
   }
 
   /**

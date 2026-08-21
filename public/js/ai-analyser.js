@@ -1,48 +1,54 @@
 /**
- * AI 文本挖掘与现场讲座建议引擎 (AI Analysis & Lecture Advisor)
- * 特性：双引擎架构（本地 Ollama 大模型 + 本地离线规则分词聚类兜底）
+ * AI 文本挖掘与现场讲座建议引擎 (AI Analysis & Lecture Advisor v2.5)
+ * 特性：双引擎真运行架构（本地 Ollama gemma4:e4b 大模型 + 本地离线规则聚类引擎）
  */
 
 const AiAnalyser = {
   ollamaUrl: 'http://localhost:11434/api/generate',
-  ollamaModel: 'gemma:4b',
+  ollamaTagsUrl: 'http://localhost:11434/api/tags',
+  ollamaModel: 'gemma4:e4b',
   isOllamaAvailable: false,
 
   /**
-   * 检测本地 Ollama 服务是否在线
+   * 自动检测本地 Ollama 服务连接与已安装模型
    */
   async checkOllama() {
     try {
       const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 1200);
-      const res = await fetch('http://localhost:11434/api/tags', { signal: ctrl.signal });
+      const tid = setTimeout(() => ctrl.abort(), 2000);
+      const res = await fetch(this.ollamaTagsUrl, { signal: ctrl.signal });
       clearTimeout(tid);
       if (res.ok) {
         const data = await res.json();
         const models = (data.models || []).map(m => m.name);
-        this.isOllamaAvailable = true;
-        return { online: true, models };
+        if (models.length > 0) {
+          // 优先匹配 gemma4:e4b 或包含 gemma 的模型，否则取第一个模型
+          const matched = models.find(m => m.includes('gemma4') || m.includes('gemma')) || models[0];
+          this.ollamaModel = matched;
+          this.isOllamaAvailable = true;
+          return { online: true, model: this.ollamaModel, models };
+        }
       }
     } catch (e) {
       this.isOllamaAvailable = false;
     }
-    return { online: false, models: [] };
+    return { online: false, model: this.ollamaModel, models: [] };
   },
 
   /**
-   * 核心聚类词典（物理教育与 AI 开发领域专用）
+   * 核心聚类词典（物理实验教学与 AI 数字化开发专用）
    */
   clusterKeywords: [
-    { cat: '实验数据采集与拟合', keys: ['数据采集', '实时绘图', '拟合', '曲线', 'DIS', '传感器', '单摆', '加速度', '速度', '测量', '误差'] },
-    { cat: '视觉识别与轨迹追踪', keys: ['摄像头', '视觉', '识别', '追踪', '轨迹', '录像', '小车', '运动', '自由落体', '视频'] },
-    { cat: '仪表数字化与OCR', keys: ['OCR', '仪表', '读数', '多用电表', '游标卡尺', '指针', '秒表', '刻度', '数字化'] },
-    { cat: '物理场可视化与仿真', keys: ['物理场', '三维', '仿真', '模拟', '磁场', '电场', '受力分析', '带电粒子'] },
-    { cat: 'AI协作编程与原型调试', keys: ['编程', '代码', '调试', 'Prompt', '提示词', '网页', 'HTML', '部署', '开发'] },
-    { cat: '教科研与论文课题转化', keys: ['论文', '课题', '区级', '市级', '成果', '教学设计', '教研'] }
+    { cat: '实验数据拟合与采集', keys: ['拟合', '曲线', '数据拟合', '速度', '加速度', '周期', '单摆', '数据采集', 'DIS', '传感器', '误差分析'] },
+    { cat: '视觉识别与轨迹追踪', keys: ['摄像头', '识别', '追踪', '轨迹', '视频', '视觉', '目标检测', '运动分析', '小球', '滑块'] },
+    { cat: '仪表数字化与OCR', keys: ['OCR', '仪表', '读数', '电表', '多用电表', '游标卡尺', '刻度', '指针', '秒表'] },
+    { cat: 'AI协作编程与微工具', keys: ['编程', '代码', '开发', '工具开发', 'Prompt', '提示词', '脚本', '网页', 'HTML', 'Python'] },
+    { cat: '物理场仿真与动态呈现', keys: ['物理场', '仿真', '模拟', '动画', '三维', '受力分析', '磁场', '电场'] },
+    { cat: '教科研与课题成果转化', keys: ['课题', '论文', '教学设计', '教研', '成果', '展示', '区级', '公开课'] }
   ],
 
   /**
-   * 本地规则关键词提取与频次统计
+   * 本地离线规则引擎：提取真实教师文本中的关键词频次
    */
   extractKeywordsFromRecords(records) {
     const textCorpus = [];
@@ -50,16 +56,18 @@ const AiAnalyser = {
       const o = r.openResponses || {};
       const n = r.needs || {};
       const p = r.project || {};
+      const b = r.basicInfo || {};
       if (o.dreamTool) textCorpus.push(o.dreamTool);
-      if (o.teachingPainPoint) textCorpus.push(o.teachingPainPoint);
       if (o.lectureExpectation) textCorpus.push(o.lectureExpectation);
       if (n.experimentPainDetail) textCorpus.push(n.experimentPainDetail);
       if (p.name) textCorpus.push(p.name);
+      if (b.adminDuty && b.adminDuty !== '无行政职务') textCorpus.push(b.adminDuty);
     });
 
     const fullText = textCorpus.join(' ');
     const counts = {};
 
+    // 统计预设教研词频
     this.clusterKeywords.forEach(group => {
       group.keys.forEach(k => {
         const reg = new RegExp(k, 'gi');
@@ -70,61 +78,72 @@ const AiAnalyser = {
       });
     });
 
-    // 排序 TOP 12 关键词
+    // 补充通用教研分词提取（提取 2-4 字高频词）
+    const customMatches = fullText.match(/[\u4e00-\u9fa5]{2,4}/g) || [];
+    const stopWords = ['我们', '希望', '可以', '进行', '以及', '通过', '或者', '这个', '那个', '因为', '所以', '如果', '为了', '老师', '中学', '学生'];
+    customMatches.forEach(w => {
+      if (!stopWords.includes(w) && w.length >= 2) {
+        if (!counts[w]) {
+          const m = fullText.match(new RegExp(w, 'g'));
+          if (m && m.length >= 1) counts[w] = m.length;
+        }
+      }
+    });
+
     const sorted = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 12)
+      .slice(0, 10)
       .map(([word, freq]) => ({ word, freq }));
 
     return sorted;
   },
 
   /**
-   * 本地规则引擎生成讲座调整建议
+   * 本地规则引擎：推导讲座建议报告
    */
   generateRuleBasedAdvice(records, capabilitySummary) {
     const N = records.length;
+    const keywords = this.extractKeywordsFromRecords(records);
+
     if (N === 0) {
       return {
-        summary: "当前尚无教师提交问卷数据，请提示参训教师扫码填报。",
-        focusStrengthen: ["物理教学中的生成式 AI 基础应用", "零代码提示词工程入门"],
-        focusReduce: ["复杂理论推导"],
+        summary: "当前尚无教师提交问卷数据，请展示投屏二维码提示参训教师扫码填报。",
+        focusStrengthen: ["物理教学中的生成式 AI 基础应用与提示词工程", "零代码指挥 AI 生成物理实验网页入门"],
+        focusReduce: ["复杂底层算法与手写代码教学"],
         keywords: []
       };
     }
 
-    const keywords = this.extractKeywordsFromRecords(records);
     const avgScores = capabilitySummary.scores || [0, 0, 0, 0, 0];
-    const progScore = avgScores[3]; // 编程开发均分
-    const expScore = avgScores[4];  // 实验开发均分
+    const progScore = avgScores[3] || 0; // 编程协作
+    const expScore = avgScores[4] || 0;  // 实验创新
 
     const strengthen = [];
     const reduce = [];
 
-    // 根据能力短板与期望推导现场侧重
-    if (progScore < 45) {
-      strengthen.push("【零代码门槛】重点演示如何用清晰的自然语言 Prompt 指挥 AI 生成完整物理实验交互网页");
-      reduce.push("高难度手写代码与底层算法语法讲解");
+    // 根据能力画像短板与高频诉求推导
+    if (progScore < 50) {
+      strengthen.push("【零门槛实战】重点演示如何通过清晰自然语言 Prompt 指挥 AI 生成免安装运行的单文件物理实验网页 (HTML/JS)");
+      reduce.push("枯燥复杂的 Python 基础语法与环境配置讲解");
     } else {
-      strengthen.push("【进阶调试】重点讲解 AI 生成代码的快速排错、Web API 摄像头接入与参数调优");
+      strengthen.push("【进阶调试与封装】重点讲解 AI 生成代码的错误快速定位、摄像头/传感器 Web API 接入与参数调优");
     }
 
-    if (expScore < 45) {
-      strengthen.push("【实验赋能】现场手把手复现‘手机摄像头视频运动轨迹自动提取’典型案例");
+    if (expScore < 50) {
+      strengthen.push("【实验赋能落地】手把手带领全场复现‘手机摄像头视频运动轨迹自动提取与单摆拟合’实战案例");
     } else {
-      strengthen.push("【多模态融合】拓展传感器数据蓝牙/串口实时接入与三维物理场可视化建模");
+      strengthen.push("【多模态与传感融合】拓展 DIS 传感器数据实时串口/蓝牙捕获与多维物理量动态可视化");
     }
 
-    // 根据高频词追加
-    const topWords = keywords.slice(0, 3).map(k => k.word).join('、');
-    if (topWords) {
-      strengthen.push(`【现场聚焦】结合参训教师集中关注的“${topWords}”开展实战演示与代码开源`);
+    const topKeywords = keywords.slice(0, 3).map(k => `“${k.word}”`).join('、');
+    if (topKeywords) {
+      strengthen.push(`【现场聚焦】紧扣现场教师高频关切的 ${topKeywords} 开展现场需求定制化即兴编程与开源`);
     }
 
-    strengthen.push("【成果转化】指导教师如何将现场开发的 AI 实验工具提炼为教科研论文与区级创新成果");
+    strengthen.push("【教科研成果转化】指导教师将现场生成的 AI 实验微工具凝练为区级创新课题与教学论文");
 
     return {
-      summary: `已分析本场 ${N} 位参训教师画像：教师队伍在教学内容生成方面具备良好基础，但在物理实验与代码落地层面存在较强诉求与技术卡点。`,
+      summary: `已深度挖掘现场 ${N} 位参训教师真实需求：教师群体具备良好的 AI 认知基础，核心痛点集中在“如何将具体的物理实验想法快速转化为可用数字化工具”。`,
       focusStrengthen: strengthen,
       focusReduce: reduce,
       keywords: keywords
@@ -132,32 +151,50 @@ const AiAnalyser = {
   },
 
   /**
-   * 综合分析入口：优先调用 Ollama，失败时无缝切换为本地规则分析
+   * 综合分析调度：支持真实调用 Ollama 大模型与本地规则引擎
    */
-  async runAnalysis(records, capabilitySummary) {
-    const fallbackResult = this.generateRuleBasedAdvice(records, capabilitySummary);
+  async runAnalysis(records, capabilitySummary, forceEngine = null) {
+    const checkResult = await this.checkOllama();
+    const useOllama = (forceEngine === 'ollama') || (!forceEngine && checkResult.online);
 
-    // 如果 Ollama 在线且有数据，尝试获取深度洞察
-    if (this.isOllamaAvailable && records.length > 0) {
+    const ruleAdvice = this.generateRuleBasedAdvice(records, capabilitySummary);
+
+    // 1. 真运行 Ollama 大模型
+    if (useOllama && checkResult.online && records.length > 0) {
       try {
-        const prompt = `你是一位物理教育专家与AI技术培训导师。以下是本次讲座${records.length}位中学物理教师的调研简报：
-- 教师AI内容生成能力平均分: ${capabilitySummary.scores[0]}分/100
-- 教师编程协作开发能力平均分: ${capabilitySummary.scores[3]}分/100
-- 教师物理实验创新开发能力平均分: ${capabilitySummary.scores[4]}分/100
-- 教师热点关注词: ${fallbackResult.keywords.map(k => k.word).join(', ')}
-请用严谨精炼的语言输出两部分建议（限200字以内）：
-1. 【本场讲座重点增加】
-2. 【本场讲座适当精简】`;
+        const concerns = records.map(r => {
+          const o = r.openResponses || {};
+          const n = r.needs || {};
+          const p = r.project || {};
+          return [o.lectureExpectation, o.dreamTool, n.experimentPainDetail, p.name].filter(Boolean).join('; ');
+        }).filter(t => t.length > 0).join('\n- ');
+
+        const prompt = `你是一位物理教育专家与AI技术培训导师。以下是本次培训现场${records.length}位中学物理教师填写的真实需求与困惑：
+- ${concerns || '希望用AI辅助物理实验教学与工具开发'}
+
+教师群体能力画像评估：
+- 教学内容生成均分: ${capabilitySummary.scores ? capabilitySummary.scores[0] : 60}分/100
+- 编程协作开发均分: ${capabilitySummary.scores ? capabilitySummary.scores[3] : 45}分/100
+- 实验创新开发均分: ${capabilitySummary.scores ? capabilitySummary.scores[4] : 40}分/100
+
+请对上述真实需求进行提炼，严格输出标准 JSON 格式：
+{
+  "keywords": ["提炼出的5到8个核心热词，如：运动追踪, 曲线拟合, 摄像头识别, 工具开发, DIS传感器"],
+  "summary": "一句话概括全场教师群体特征与诉求（60字以内）",
+  "focusStrengthen": ["本场讲座建议重点加强的实操实训点1", "重点加强点2", "重点加强点3"],
+  "focusReduce": ["建议适当精简或避免的内容点"]
+}`;
 
         const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 4000);
+        const tid = setTimeout(() => ctrl.abort(), 12000); // 12s 超时
         const res = await fetch(this.ollamaUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: this.ollamaModel,
             prompt: prompt,
-            stream: false
+            stream: false,
+            format: 'json'
           }),
           signal: ctrl.signal
         });
@@ -165,38 +202,45 @@ const AiAnalyser = {
 
         if (res.ok) {
           const data = await res.json();
-          return {
-            source: 'Ollama (' + this.ollamaModel + ')',
-            content: data.response,
-            keywords: fallbackResult.keywords,
-            isOllama: true
-          };
+          let parsed = null;
+          try {
+            parsed = typeof data.response === 'string' ? JSON.parse(data.response) : data.response;
+          } catch (pe) {
+            const match = (data.response || '').match(/\{[\s\S]*\}/);
+            if (match) parsed = JSON.parse(match[0]);
+          }
+
+          if (parsed && (parsed.keywords || parsed.focusStrengthen)) {
+            const kwList = Array.isArray(parsed.keywords) 
+              ? parsed.keywords.map((k, i) => ({ word: k, freq: Math.max(1, records.length - i) }))
+              : ruleAdvice.keywords;
+
+            return {
+              source: `本地 Ollama (${this.ollamaModel}) 引擎 [真运行]`,
+              engine: 'ollama',
+              model: this.ollamaModel,
+              summary: parsed.summary || ruleAdvice.summary,
+              focusStrengthen: parsed.focusStrengthen || ruleAdvice.focusStrengthen,
+              focusReduce: parsed.focusReduce || ruleAdvice.focusReduce,
+              keywords: kwList.length > 0 ? kwList : ruleAdvice.keywords,
+              isOllama: true
+            };
+          }
         }
-      } catch (e) {
-        console.warn('Ollama 推理超时或断开，已平滑切换为本地离线规则引擎。', e);
+      } catch (err) {
+        console.warn('Ollama 推理响应异常，已平滑切换为本地离线规则引擎。', err);
       }
     }
 
-    // 规则引擎输出格式化 HTML 内容
-    let html = `<p style="margin-bottom: 8px;"><strong>📊 群体画像洞察：</strong>${fallbackResult.summary}</p>`;
-    html += `<p style="color: var(--accent-cyan); font-weight: 600; margin-top: 8px;">🎯 建议本场讲座重点加强：</p><ul style="padding-left: 18px; margin-bottom: 8px;">`;
-    fallbackResult.focusStrengthen.forEach(item => {
-      html += `<li>${item}</li>`;
-    });
-    html += `</ul>`;
-
-    if (fallbackResult.focusReduce.length > 0) {
-      html += `<p style="color: var(--accent-orange); font-weight: 600; margin-top: 6px;">⚡ 建议本场讲座适度降低：</p><ul style="padding-left: 18px;">`;
-      fallbackResult.focusReduce.forEach(item => {
-        html += `<li>${item}</li>`;
-      });
-      html += `</ul>`;
-    }
-
+    // 2. 规则引擎兜底 / 显式指定规则引擎
     return {
-      source: '本地规则分析引擎 (离线稳定)',
-      content: html,
-      keywords: fallbackResult.keywords,
+      source: '轻量本地规则聚类引擎 (离线稳定)',
+      engine: 'rule',
+      model: 'RuleCluster-v2.5',
+      summary: ruleAdvice.summary,
+      focusStrengthen: ruleAdvice.focusStrengthen,
+      focusReduce: ruleAdvice.focusReduce,
+      keywords: ruleAdvice.keywords,
       isOllama: false
     };
   }

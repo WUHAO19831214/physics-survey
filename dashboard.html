@@ -86,7 +86,7 @@
 
         <!-- 引擎切换栏 -->
         <div class="engine-tabs-row">
-          <button class="engine-tab-btn active" id="tabOllama">本地 Ollama (gemma:4b) 引擎</button>
+          <button class="engine-tab-btn active" id="tabOllama">本地 Ollama (gemma4:e4b) 引擎</button>
           <button class="engine-tab-btn" id="tabRule">轻量本地规则聚类引擎</button>
         </div>
 
@@ -260,6 +260,25 @@
           <div class="qr-tip-box">
             💡 <strong>讲座投屏建议</strong>：讲座开场时，可将本二维码直接投影在大屏幕上。外网安全隔离已开启，老师填报完毕后仅可提交数据，无法窥探或访问讲师主控大看板。
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 现场 AI 研判与讲座调优建议弹窗 (全屏大屏支持) -->
+  <div class="qr-modal-overlay" id="aiAdviceModal" style="display: none;">
+    <div class="qr-modal-card" style="max-width: 680px;">
+      <div class="qr-modal-header">
+        <div class="qr-modal-title">⚡ AI 核心诉求挖掘与现场讲座调优策略</div>
+        <button class="qr-modal-close" id="btnCloseAiAdvice">&times;</button>
+      </div>
+      <div class="qr-modal-body" style="flex-direction: column; padding: 24px; max-height: 75vh; overflow-y: auto;">
+        <div class="qr-tag-row" style="margin-bottom: 16px;">
+          <span class="qr-status-badge" id="modalAiSource">🤖 本地 Ollama (gemma4:e4b) 引擎</span>
+          <span class="qr-sec-badge" id="modalAiRecordCount">基于 0 位教师真实数据</span>
+        </div>
+        <div id="modalAiContent" style="color: var(--text-main); font-size: 0.95rem; line-height: 1.7;">
+          <!-- 动态渲染分析结果 -->
         </div>
       </div>
     </div>
