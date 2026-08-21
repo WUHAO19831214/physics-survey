@@ -211,10 +211,50 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /**
+   * 全球云端队列双向同步 (自动从 ntfy.sh 云端队列拉取 GitHub Pages 提交并写入本地)
+   */
+  async function syncFromCloudQueue() {
+    try {
+      const res = await fetch('https://ntfy.sh/wuhao_chongming_physics_2026/json?poll=1&since=all');
+      if (!res.ok) return;
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      let newCount = 0;
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try {
+          const msg = JSON.parse(line);
+          if (msg.event === 'message' && msg.message) {
+            const item = JSON.parse(msg.message);
+            if (item && item.basicInfo && item.aiCapability) {
+              const exists = rawData.some(r => 
+                (item.id && r.id === item.id) || 
+                (r.submittedAt === item.submittedAt && r.basicInfo?.name === item.basicInfo?.name)
+              );
+              if (!exists) {
+                await fetch('/api/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(item)
+                });
+                newCount++;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+      if (newCount > 0) {
+        console.log(`[Cloud Sync] ☁️ 已成功从全球云端队列拉取并写入 ${newCount} 条新答卷！`);
+      }
+    } catch (err) {}
+  }
+
+  /**
    * 刷新核心数据
    */
   async function refreshData(showFeedback = false) {
     try {
+      await syncFromCloudQueue();
       const res = await fetch(`/api/data?sessionId=${encodeURIComponent(currentSessionId)}`);
       if (res.ok) {
         const json = await res.json();

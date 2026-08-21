@@ -510,12 +510,15 @@ const server = http.createServer((req, res) => {
 // =========================================================================
 const https = require('https');
 const CLOUD_SYNC_TOPIC = 'wuhao_chongming_physics_2026';
-let lastSyncTime = Date.now() - 24 * 3600 * 1000;
+let lastProcessedMessageId = '';
 
 function startCloudSync() {
   setInterval(() => {
     try {
-      const queryUrl = `https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=${Math.floor(lastSyncTime / 1000)}`;
+      const queryUrl = lastProcessedMessageId 
+        ? `https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=${encodeURIComponent(lastProcessedMessageId)}`
+        : `https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=all`;
+
       https.get(queryUrl, (res) => {
         let rawData = '';
         res.on('data', chunk => { rawData += chunk; });
@@ -527,6 +530,7 @@ function startCloudSync() {
             try {
               const msg = JSON.parse(line);
               if (msg.event === 'message' && msg.message) {
+                lastProcessedMessageId = msg.id;
                 const item = JSON.parse(msg.message);
                 if (item && item.basicInfo && item.aiCapability) {
                   const sessionId = item.sessionId || getDefaultSessionId();
@@ -540,9 +544,6 @@ function startCloudSync() {
                     writeSessionData(sessionId, currentData);
                     console.log(`[Cloud Sync] ☁️ 成功从全球云端队列实时同步新答卷: ${item.basicInfo.name || '匿名'} (${item.basicInfo.school || '崇明'})`);
                   }
-                  if (msg.time && msg.time * 1000 > lastSyncTime) {
-                    lastSyncTime = msg.time * 1000;
-                  }
                 }
               }
             } catch (err) {}
@@ -550,7 +551,7 @@ function startCloudSync() {
         });
       }).on('error', () => {});
     } catch (e) {}
-  }, 3500);
+  }, 2500);
 }
 
 startCloudSync();
