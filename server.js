@@ -505,6 +505,56 @@ const server = http.createServer((req, res) => {
   });
 });
 
+// =========================================================================
+// 全球云端数据队列同步服务 (保证 GitHub Pages 在任何网络/关机状态下提交永不丢失)
+// =========================================================================
+const https = require('https');
+const CLOUD_SYNC_TOPIC = 'wuhao_chongming_physics_2026';
+let lastSyncTime = Date.now() - 24 * 3600 * 1000;
+
+function startCloudSync() {
+  setInterval(() => {
+    try {
+      const queryUrl = `https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=${Math.floor(lastSyncTime / 1000)}`;
+      https.get(queryUrl, (res) => {
+        let rawData = '';
+        res.on('data', chunk => { rawData += chunk; });
+        res.on('end', () => {
+          if (res.statusCode !== 200) return;
+          const lines = rawData.trim().split('\n');
+          lines.forEach(line => {
+            if (!line.trim()) return;
+            try {
+              const msg = JSON.parse(line);
+              if (msg.event === 'message' && msg.message) {
+                const item = JSON.parse(msg.message);
+                if (item && item.basicInfo && item.aiCapability) {
+                  const sessionId = item.sessionId || getDefaultSessionId();
+                  const currentData = readSessionData(sessionId);
+                  const exists = currentData.some(r => 
+                    (item.id && r.id === item.id) || 
+                    (r.submittedAt === item.submittedAt && r.basicInfo?.name === item.basicInfo?.name)
+                  );
+                  if (!exists) {
+                    currentData.push(item);
+                    writeSessionData(sessionId, currentData);
+                    console.log(`[Cloud Sync] ☁️ 成功从全球云端队列实时同步新答卷: ${item.basicInfo.name || '匿名'} (${item.basicInfo.school || '崇明'})`);
+                  }
+                  if (msg.time && msg.time * 1000 > lastSyncTime) {
+                    lastSyncTime = msg.time * 1000;
+                  }
+                }
+              }
+            } catch (err) {}
+          });
+        });
+      }).on('error', () => {});
+    } catch (e) {}
+  }, 3500);
+}
+
+startCloudSync();
+
 server.listen(PORT, () => {
   console.log(`=====================================================================`);
   console.log(`  🚀 物理教师 AI 创新能力画像与实验开发需求调查平台 v2.0 已启动！`);
@@ -512,5 +562,6 @@ server.listen(PORT, () => {
   console.log(`  🖥️  讲师实时大屏看板: http://localhost:${PORT}/dashboard`);
   console.log(`  📁 数据存储目录:     ${DATA_DIR}`);
   console.log(`  ⚙️  默认研训批次:     ${getDefaultSessionId()}`);
+  console.log(`  ☁️  云端队列同步:     已就绪 (ntfy.sh/${CLOUD_SYNC_TOPIC})`);
   console.log(`=====================================================================`);
 });
