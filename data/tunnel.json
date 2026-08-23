@@ -1,7 +1,7 @@
 {
-  "tunnelUrl": "https://api.trycloudflare.com",
-  "surveyUrl": "https://api.trycloudflare.com/",
-  "localIp": "198.18.0.1",
-  "localUrl": "http://198.18.0.1:3000/",
-  "updatedAt": "2026-08-23T19:01:58.704Z"
+  "tunnelUrl": "https://reference-anaheim-leisure-conduct.trycloudflare.com",
+  "surveyUrl": "https://reference-anaheim-leisure-conduct.trycloudflare.com/",
+  "localIp": "192.168.31.144",
+  "localUrl": "http://192.168.31.144:3000/",
+  "updatedAt": "2026-08-23T19:02:08.035Z"
 }
