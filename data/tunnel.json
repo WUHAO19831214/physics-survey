@@ -1,7 +1,7 @@
 {
-  "tunnelUrl": "https://shapes-combinations-parenting-standards.trycloudflare.com",
-  "surveyUrl": "https://shapes-combinations-parenting-standards.trycloudflare.com/",
-  "localIp": "192.168.31.46",
-  "localUrl": "http://192.168.31.46:3000/",
-  "updatedAt": "2026-08-26T18:04:53.424Z"
+  "tunnelUrl": "https://api.trycloudflare.com",
+  "surveyUrl": "https://api.trycloudflare.com/",
+  "localIp": "198.18.0.1",
+  "localUrl": "http://198.18.0.1:3000/",
+  "updatedAt": "2026-08-26T19:00:22.674Z"
 }
