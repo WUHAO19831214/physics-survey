@@ -1,7 +1,7 @@
 {
-  "tunnelUrl": "https://api.trycloudflare.com",
-  "surveyUrl": "https://api.trycloudflare.com/",
-  "localIp": "198.18.0.1",
-  "localUrl": "http://198.18.0.1:3000/",
-  "updatedAt": "2026-08-26T19:01:57.850Z"
+  "tunnelUrl": "https://nickel-california-orlando-dodge.trycloudflare.com",
+  "surveyUrl": "https://nickel-california-orlando-dodge.trycloudflare.com/",
+  "localIp": "192.168.31.144",
+  "localUrl": "http://192.168.31.144:3000/",
+  "updatedAt": "2026-08-26T19:02:05.957Z"
 }
