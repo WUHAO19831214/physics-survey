@@ -1,7 +1,7 @@
 {
-  "tunnelUrl": "https://api.trycloudflare.com",
-  "surveyUrl": "https://api.trycloudflare.com/",
-  "localIp": "198.18.0.1",
-  "localUrl": "http://198.18.0.1:3000/",
-  "updatedAt": "2026-08-28T01:07:02.672Z"
+  "tunnelUrl": "https://groundwater-frequently-allowance-diagram.trycloudflare.com",
+  "surveyUrl": "https://groundwater-frequently-allowance-diagram.trycloudflare.com/",
+  "localIp": "10.80.23.102",
+  "localUrl": "http://10.80.23.102:3000/",
+  "updatedAt": "2026-08-28T01:07:12.329Z"
 }
